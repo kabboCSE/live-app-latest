@@ -1,0 +1,325 @@
+{
+  "sports": [
+    {
+      "id": 1,
+      "name": "T Sports HD",
+      "logo": "🟥",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=fa3c97145a29a17b6b48562950a07004"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "T Sports 720",
+      "logo": "🟥",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Somoy TV",
+      "logo": "🟥",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/1702-audio_113322_eng=113200-video=1692000.m3u8"
+        },
+        {
+          "label": "Server 2",
+          "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/1702-audio_113322_eng=113200-video=1692000.m3u8"
+        }
+      ]
+    },
+
+    {
+      "id": 4,
+      "name": "BTV HD",
+      "logo": "🟥",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/1709-audio_113392_eng=113200-video=1692000.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "PTV Sports",
+      "logo": "⚽",
+      "bgColor": "bg-green-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen5.aynaott.com/PtvSports/tracks-v1a1/mono.ts.m3u8"
+        },
+        {
+          "label": "720",
+          "url": "https://tvsen5.aynaott.com/PtvSports/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=1ab9f9097bd5912405e03dbf8c2657ce"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "A Sports",
+      "logo": "📺",
+      "bgColor": "bg-orange-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen6.aynaott.com/asports/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=39263e9ac9b7ddf293d65aa1357f7a23"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Cricket Gold",
+      "logo": "🏏",
+      "bgColor": "bg-yellow-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen6.aynaott.com/CricketGold/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=5f80e6b43d52a8616ed733b2d13e290c"
+        },
+        {
+          "label": "Server 2",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        },
+        {
+          "label": "Server 3",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Bein Sports 1 · Footbal",
+      "logo": "⛳",
+      "bgColor": "bg-blue-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg02873-kravemedia-mtrspt1-distrotv/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Biss+ Football",
+      "logo": "⚽",
+      "bgColor": "bg-slate-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Fox Sports 2",
+      "logo": "🎬",
+      "bgColor": "bg-indigo-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "ESPN",
+      "logo": "🏀",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "TEN 2",
+      "logo": "📻",
+      "bgColor": "bg-orange-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Star Sports 1 HD",
+      "logo": "⭐",
+      "bgColor": "bg-yellow-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    }
+  ],
+  "news": [
+    {
+      "id": 201,
+      "name": "Channel 24",
+      "logo": "🎙️",
+      "bgColor": "bg-blue-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "name": "ATN News",
+      "logo": "📢",
+      "bgColor": "bg-green-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "name": "DBC News",
+      "logo": "🎤",
+      "bgColor": "bg-yellow-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 204,
+      "name": "Ekannotor TV",
+      "logo": "📡",
+      "bgColor": "bg-orange-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    }
+  ],
+  "bangla": [
+    {
+      "id": 101,
+      "name": "BTV National",
+      "logo": "📺",
+      "bgColor": "bg-orange-100",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Channel I",
+      "logo": "🎬",
+      "bgColor": "bg-blue-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "NTV",
+      "logo": "📡",
+      "bgColor": "bg-cyan-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "RTV",
+      "logo": "🎪",
+      "bgColor": "bg-indigo-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Bangla Vision",
+      "logo": "🎥",
+      "bgColor": "bg-pink-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Somoy News",
+      "logo": "📰",
+      "bgColor": "bg-blue-100",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Jamuna TV",
+      "logo": "🌿",
+      "bgColor": "bg-green-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "Zee Bangla",
+      "logo": "✨",
+      "bgColor": "bg-purple-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+        }
+      ]
+    }
+  ]
+}
