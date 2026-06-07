@@ -675,7 +675,7 @@ export default function LiveTVApp() {
       </footer> */}
       <footer className="relative bg-white/40 backdrop-blur-md border-t border-white/60 py-10 text-center">
         <p className="text-gray-400 text-xs tracking-widest uppercase">
-          &copy; 2024 StreamPro · Premium Live Television
+          &copy; 2026 Kabbo Streamer Pro · Premium Live Television
         </p>
 
         <div className="mt-6 flex flex-col items-center gap-3">
