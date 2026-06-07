@@ -145,7 +145,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen5.aynaott.com/espn/index.m3u8?e=1780840189&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=793b19e5b478c9d2ebee7dd28f4484b2"
         }
       ]
     },
@@ -157,7 +157,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen7.aynaott.com/tsn2/index.m3u8?e=1780840189&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=4cff48ad3a9f7684467e06b2a6e9f281"
         }
       ]
     },
@@ -183,7 +183,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/channel24/index.m3u8?e=1780840187&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=3289877334c2ff9ec46be76dad516842"
         }
       ]
     },
@@ -195,7 +195,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/atnnews/index.m3u8?e=1780840187&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=f6ebda2e294376b14254659170994930"
         }
       ]
     },
@@ -207,19 +207,43 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/dbcnews/index.m3u8?e=1780840187&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=4989815fe78975261c94f5922994e2f3"
         }
       ]
     },
     {
       "id": 204,
-      "name": "Ekannotor TV",
+      "name": "Ekattor TV",
       "logo": "📡",
       "bgColor": "bg-orange-50",
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/ekattorbdtv/index.m3u8?e=1780840188&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=bdb19744e12506ea2c45908715c8be8d"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Somoy News",
+      "logo": "📰",
+      "bgColor": "bg-blue-100",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen6.aynaott.com/somoytv/index.m3u8?e=1780840187&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=6b41334dab0c68f26a15838017f9debe"
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "Al Jazeera · News",
+      "logo": "✨",
+      "bgColor": "bg-purple-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1721/output/index.m3u8"
         }
       ]
     }
@@ -233,7 +257,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/btvhd/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=b048ab27656728c70ec19f6bae2c15fb"
         }
       ]
     },
@@ -245,7 +269,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/channeli/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=0963302002ec123256badd07c2a88af5"
         }
       ]
     },
@@ -257,7 +281,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen5.aynaott.com/ntvbd/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=d538fbd343ccc4f0dc974145aedebd8b"
         }
       ]
     },
@@ -269,7 +293,7 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen5.aynaott.com/RtvHD/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=5aac0af3cb64c14b2ba5380fc2ad7d8b"
         }
       ]
     },
@@ -281,43 +305,32 @@
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen5.aynaott.com/banglavision/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=18e2831ec1279b4ac06e26e45a7a051e"
         }
       ]
     },
+
     {
-      "id": 106,
-      "name": "Somoy News",
-      "logo": "📰",
-      "bgColor": "bg-blue-100",
-      "streams": [
-        {
-          "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
-        }
-      ]
-    },
-    {
-      "id": 107,
+      "id": 1077,
       "name": "Jamuna TV",
       "logo": "🌿",
       "bgColor": "bg-green-50",
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/jamunatv/index.m3u8?e=1780840188&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=0b76cbec0e97a2c18d3b49b64cf71355"
         }
       ]
     },
     {
-      "id": 108,
-      "name": "Zee Bangla Test",
-      "logo": "✨",
-      "bgColor": "bg-purple-50",
+      "id": 107,
+      "name": "ETV · Bangla",
+      "logo": "🌿",
+      "bgColor": "bg-green-50",
       "streams": [
         {
           "label": "Server 1",
-          "url": "https://c822c659.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xic2hfSExT/playlist.m3u8"
+          "url": "https://tvsen6.aynaott.com/etv/index.m3u8?e=1780840186&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=ad44c536e7551a210c5af605ab4f42b2"
         }
       ]
     }
