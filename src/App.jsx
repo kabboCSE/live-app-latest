@@ -352,7 +352,7 @@ function Player({
         >
           <video
             ref={videoRef}
-            className={`w-full h-full ${isFullscreen ? "object-cover" : "object-contain"}`}
+            className={`w-full h-full ${isFullscreen ? "object-fill" : "object-contain"}`}
             playsInline
             autoPlay
             crossOrigin="anonymous"
