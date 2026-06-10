@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Somoy TV",
-      "logo": "🟥",
+      "logo": "https://upload.wikimedia.org/wikipedia/bn/thumb/f/f6/%E0%A6%B8%E0%A6%AE%E0%A6%AF%E0%A6%BC_%E0%A6%9F%E0%A6%BF%E0%A6%AD%E0%A6%BF%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.svg/330px-%E0%A6%B8%E0%A6%AE%E0%A6%AF%E0%A6%BC_%E0%A6%9F%E0%A6%BF%E0%A6%AD%E0%A6%BF%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.svg.png?_=20250102083708",
       "bgColor": "bg-red-50",
       "streams": [
         {
@@ -20,7 +20,7 @@
     {
       "id": 2,
       "name": "BTV HD",
-      "logo": "🟥",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR--ukt2yj8qxZImWqIMmEOiQs2V1vaPI9kFg&s",
       "bgColor": "bg-red-50",
       "streams": [
         {
@@ -32,7 +32,7 @@
     {
       "id": 3,
       "name": "T Sports HD",
-      "logo": "🟥",
+      "logo": "https://i.ibb.co.com/0VjJK6Rt/T-Sports-logo-svg.png",
       "bgColor": "bg-red-50",
       "streams": [
         {

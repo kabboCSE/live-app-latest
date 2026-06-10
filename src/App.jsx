@@ -272,7 +272,17 @@ function Player({
         {/* Title bar */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-white/80">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{channel.logo}</span>
+            {/* logo */}
+            {/* <span className="text-2xl">{channel.logo}</span> */}
+            {channel.logo.startsWith("http") ? (
+              <img
+                src={channel.logo}
+                alt={channel.name}
+                className="w-8 h-8 object-contain"
+              />
+            ) : (
+              <span className="text-2xl">{channel.logo}</span>
+            )}
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-gray-900 text-sm leading-none">
@@ -520,7 +530,19 @@ function ChannelCard({ channel, isSelected, onSelect }) {
 
       {/* content */}
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-3">
-        <div className="text-4xl mb-3 drop-shadow-sm">{channel.logo}</div>
+        {/* logo */}
+        {/* <div className="text-4xl mb-3 drop-shadow-sm">{channel.logo}</div> */}
+        <div className="mb-3 drop-shadow-sm flex items-center justify-center w-12 h-12">
+          {channel.logo.startsWith("http") ? (
+            <img
+              src={channel.logo}
+              alt={channel.name}
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <span className="text-4xl">{channel.logo}</span>
+          )}
+        </div>
         <p className="text-gray-700 font-semibold text-xs leading-snug text-center line-clamp-3">
           {channel.name}
         </p>
