@@ -2,30 +2,6 @@
   "sports": [
     {
       "id": 1,
-      "name": "T Sports HD",
-      "logo": "🟥",
-      "bgColor": "bg-red-50",
-      "streams": [
-        {
-          "label": "Server 1",
-          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=fa3c97145a29a17b6b48562950a07004"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "T Sports 720",
-      "logo": "🟥",
-      "bgColor": "bg-red-50",
-      "streams": [
-        {
-          "label": "Server 1",
-          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8"
-        }
-      ]
-    },
-    {
-      "id": 3,
       "name": "Somoy TV",
       "logo": "🟥",
       "bgColor": "bg-red-50",
@@ -35,14 +11,14 @@
           "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/1702-audio_113322_eng=113200-video=1692000.m3u8"
         },
         {
-          "label": "Server 2",
+          "label": "720",
           "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/1702-audio_113322_eng=113200-video=1692000.m3u8"
         }
       ]
     },
 
     {
-      "id": 4,
+      "id": 2,
       "name": "BTV HD",
       "logo": "🟥",
       "bgColor": "bg-red-50",
@@ -53,6 +29,23 @@
         }
       ]
     },
+    {
+      "id": 3,
+      "name": "T Sports HD",
+      "logo": "🟥",
+      "bgColor": "bg-red-50",
+      "streams": [
+        {
+          "label": "Server 1",
+          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8?e=1780716533&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=fa3c97145a29a17b6b48562950a07004"
+        },
+        {
+          "label": "Server 2",
+          "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8"
+        }
+      ]
+    },
+
     {
       "id": 5,
       "name": "PTV Sports",
