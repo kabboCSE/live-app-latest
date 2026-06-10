@@ -305,13 +305,7 @@ function Player({
 
   return (
     // Outer card — white/glass frame like the screenshot
-    <div
-      className={
-        isFullscreen
-          ? "fixed inset-0 z-[9999] bg-black flex flex-col"
-          : "mx-auto max-w-4xl px-4 md:px-8 py-6"
-      }
-    >
+    <div className="mx-auto max-w-4xl px-4 md:px-8 py-6">
       <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/80 bg-white/70 backdrop-blur-xl">
         {/* Title bar */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-white/80">
@@ -358,7 +352,7 @@ function Player({
         >
           <video
             ref={videoRef}
-            className={`w-full h-full ${isFullscreen ? "object-cover" : "object-contain"}`}
+            className="w-full h-full object-contain"
             playsInline
             autoPlay
             crossOrigin="anonymous"
@@ -505,10 +499,8 @@ function Player({
                   onClick={() => {
                     if (!document.fullscreenElement) {
                       videoRef.current?.parentElement?.requestFullscreen?.();
-                      screen.orientation?.lock?.("landscape").catch(() => {});
                     } else {
                       document.exitFullscreen?.();
-                      screen.orientation?.unlock?.();
                     }
                   }}
                   title="Fullscreen"
