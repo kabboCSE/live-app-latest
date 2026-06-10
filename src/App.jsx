@@ -594,6 +594,25 @@ export default function LiveTVApp() {
   const [streamIdx, setStreamIdx] = useState(0);
   const playerRef = useRef(null);
 
+  //demo
+  useEffect(() => {
+    const blockCtx = (e) => e.preventDefault();
+    const blockKeys = (e) => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) ||
+        (e.ctrlKey && e.key === "u")
+      )
+        e.preventDefault();
+    };
+    document.addEventListener("contextmenu", blockCtx);
+    document.addEventListener("keydown", blockKeys);
+    return () => {
+      document.removeEventListener("contextmenu", blockCtx);
+      document.removeEventListener("keydown", blockKeys);
+    };
+  }, []);
+
   const currentIdx = selectedChannel
     ? ALL_CHANNELS.findIndex((ch) => ch.id === selectedChannel.id)
     : -1;
