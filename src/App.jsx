@@ -177,8 +177,10 @@ function Player({
   const [volume, setVolume] = useState(0.7);
   const [showControls, setShowControls] = useState(true);
   const hideTimer = useRef(null);
+  const stuckTimer = useRef(null);
 
   const activeStream = channel.streams[streamIdx];
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (!videoRef.current || !activeStream) return;
@@ -264,6 +266,42 @@ function Player({
     clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => setShowControls(false), 3000);
   };
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let lastTime = 0;
+    let lastCheck = Date.now();
+
+    const checkProgress = () => {
+      const now = Date.now();
+      if (!video.paused && !video.ended) {
+        if (video.currentTime === lastTime && now - lastCheck > 3000) {
+          // ৮ সেকেন্ড ধরে time এগোয়নি — stuck!
+          onStreamChange(streamIdx);
+        } else if (video.currentTime !== lastTime) {
+          lastTime = video.currentTime;
+          lastCheck = now;
+        }
+      } else {
+        lastCheck = now;
+      }
+    };
+
+    stuckTimer.current = setInterval(checkProgress, 2000);
+
+    return () => {
+      clearInterval(stuckTimer.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [streamIdx, onStreamChange]);
+  useEffect(() => {
+    const onFSChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", onFSChange);
+    return () => document.removeEventListener("fullscreenchange", onFSChange);
+  }, []);
 
   return (
     // Outer card — white/glass frame like the screenshot
@@ -314,7 +352,7 @@ function Player({
         >
           <video
             ref={videoRef}
-            className="w-full h-full object-contain"
+            className={`w-full h-full ${isFullscreen ? "object-cover" : "object-contain"}`}
             playsInline
             autoPlay
             crossOrigin="anonymous"
@@ -351,9 +389,14 @@ function Player({
                 "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 30%, transparent 65%, rgba(0,0,0,0.7) 100%)",
             }}
           >
-            {/* spacer top */}
-            <div />
-
+            {/* Top — server buttons fullscreen এ */}
+            <div className="flex items-center justify-between px-3 md:px-5 pt-3">
+              <ServerButtons
+                streams={channel.streams}
+                activeIdx={streamIdx}
+                onSelect={onStreamChange}
+              />
+            </div>
             {/* Bottom controls */}
             {/* Bottom controls */}
             <div className="flex items-center gap-2 md:gap-3 px-3 md:px-5 pb-4 md:pb-5 flex-wrap justify-center md:justify-start">
@@ -453,7 +496,15 @@ function Player({
                   LIVE
                 </span>
                 <CircleBtn
-                  onClick={() => videoRef.current?.requestFullscreen?.()}
+                  onClick={() => {
+                    if (!document.fullscreenElement) {
+                      videoRef.current?.parentElement?.requestFullscreen?.();
+                      screen.orientation?.lock?.("landscape").catch(() => {});
+                    } else {
+                      document.exitFullscreen?.();
+                      screen.orientation?.unlock?.();
+                    }
+                  }}
                   title="Fullscreen"
                 >
                   <svg
