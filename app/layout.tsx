@@ -1,0 +1,97 @@
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import MobileNavBar from "./components/MobileNavBar";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#070414" },
+    { media: "(prefers-color-scheme: light)", color: "#070414" },
+  ],
+};
+
+export const metadata: Metadata = {
+  title: "NeoStream — Watch 6500+ Live TV Channels Free",
+  description:
+    "Stream 6500+ live TV channels from Bangladesh, India, and worldwide. Premium IPTV web player with HLS streaming, custom playlist support, and a modern UI. No app install needed.",
+  keywords: [
+    "NeoStream",
+    "IPTV",
+    "live TV",
+    "streaming",
+    "HLS player",
+    "TV channels",
+    "Bangladesh TV",
+    "sports live",
+    "T Sports",
+    "free TV",
+    "online TV",
+    "IPTV player",
+    "m3u player",
+    "web TV player",
+  ],
+  authors: [{ name: "Md. Shahriar Kabbo", url: "https://github.com/Shahriar-Kabbo" }],
+  creator: "Md. Shahriar Kabbo",
+  publisher: "Md. Shahriar Kabbo",
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "IPTV Player",
+    title: "IPTV Player — Watch 6500+ Live TV Channels Free",
+    description:
+      "Stream 6500+ live TV channels from Bangladesh, India, and worldwide. Premium IPTV web player with HLS streaming, custom playlist support, and a modern UI.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "IPTV Player — Live TV streaming with 6500+ channels",
+        type: "image/png",
+      },
+    ],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
+  manifest: "/manifest.json",
+  category: "entertainment",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col pb-24 md:pb-0">
+        {children}
+        <MobileNavBar />
+      </body>
+    </html>
+  );
+}

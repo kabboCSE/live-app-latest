@@ -1,0 +1,7 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://images.seeklogo.com/logo-png/61/1/cazetv-logo-png_seeklogo-619708.png" group-title="FIFA",CAZE TV
+https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8
+#EXTINF:-1 tvg-logo="https://images.seeklogo.com/logo-png/25/1/win-sports-logo-png_seeklogo-259337.png" group-title="FIFA",Win Sports
+https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8
+#EXTINF:-1 tvg-logo="https://tapmad-tv-tapmad-tv.en.aptoide.com/_next/image?url=https%3A%2F%2Fcdn.aptoide.com%2Fimgs%2F1%2F6%2F0%2F1600fc18ab2b5109bfe2cb72fb7af2f5_fgraphic.png&w=3840&q=60" group-title="FIFA",Tapmad (FIFA)
+https://premierleagpl23.akamaized.net/hls/live/2107108/tapmad-P2s6L_FiN@L-UrU/level_0.m3u8
