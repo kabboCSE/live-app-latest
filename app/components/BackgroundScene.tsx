@@ -1,28 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 interface Node {
   x: number;
   y: number;
-  baseX: number;
-  baseY: number;
   vx: number;
   vy: number;
   radius: number;
   color: string;
   glowColor: string;
   pulsePhase: number;
-  connections: number[];
-  isHovered: boolean;
-  targetRadius: number;
+  // Randomness offset per node so each moves differently
+  driftSeed: number;
 }
 
 export default function BackgroundScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const nodesRef = useRef<Node[]>([]);
   const animationRef = useRef<number>(0);
+  const dimsRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,53 +29,184 @@ export default function BackgroundScene() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
     const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      dimsRef.current = { width: w, height: h };
+      canvas.width = w;
+      canvas.height = h;
       initNodes();
     };
 
-    // Neural Network Colors - Blue/Purple theme like your image
-    const colors = [
-      { main: "rgba(147, 197, 253, 0.9)", glow: "rgba(59, 130, 246, 0.4)" },   // Blue
-      { main: "rgba(196, 181, 253, 0.8)", glow: "rgba(139, 92, 246, 0.3)" },   // Purple
-      { main: "rgba(165, 243, 252, 0.7)", glow: "rgba(6, 182, 212, 0.3)" },    // Cyan
-      { main: "rgba(255, 255, 255, 0.6)", glow: "rgba(255, 255, 255, 0.2)" }, // White
+    const palette = [
+      { node: "rgba(147, 197, 253, 0.85)", glow: "rgba(59, 130, 246, 0.25)" },
+      { node: "rgba(196, 181, 253, 0.75)", glow: "rgba(139, 92, 246, 0.2)" },
+      { node: "rgba(165, 243, 252, 0.65)", glow: "rgba(6, 182, 212, 0.2)" },
     ];
 
     const initNodes = () => {
-      const nodeCount = Math.min(100, Math.floor((width * height) / 12000));
-      nodesRef.current = [];
+      const { width, height } = dimsRef.current;
+      const count = Math.min(70, Math.floor((width * height) / 18000));
+      const nodes: Node[] = [];
 
-      for (let i = 0; i < nodeCount; i++) {
-        const x = Math.random() * width;
-        const y = Math.random() * height;
-        const colorSet = colors[Math.floor(Math.random() * colors.length)];
-        
-        nodesRef.current.push({
-          x, y,
-          baseX: x,
-          baseY: y,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          radius: Math.random() * 1.5 + 0.5,
-          color: colorSet.main,
-          glowColor: colorSet.glow,
+      for (let i = 0; i < count; i++) {
+        const c = palette[Math.floor(Math.random() * palette.length)];
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 1.2 + 0.6,
+          color: c.node,
+          glowColor: c.glow,
           pulsePhase: Math.random() * Math.PI * 2,
-          connections: [],
-          isHovered: false,
-          targetRadius: Math.random() * 1.5 + 0.5,
+          driftSeed: Math.random() * 1000,
         });
       }
+
+      nodesRef.current = nodes;
     };
 
-    // Mouse handlers
-    const handleMouseMove = (e: MouseEvent) => {
+    const animate = () => {
+      const { width, height } = dimsRef.current;
+      const nodes = nodesRef.current;
+      const mouse = mouseRef.current;
+      const time = Date.now() / 1000;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // ─── Update nodes — random movement ───
+      for (const node of nodes) {
+        // Random drift — each node has its own unique wandering pattern
+        node.vx += Math.sin(time * 0.3 + node.driftSeed) * 0.012;
+        node.vy += Math.cos(time * 0.4 + node.driftSeed * 1.3) * 0.012;
+
+        // Occasional random jolts for more natural random movement
+        node.vx += Math.sin(time * 0.7 + node.driftSeed * 2.1) * 0.006;
+        node.vy += Math.cos(time * 0.9 + node.driftSeed * 1.7) * 0.006;
+
+        // Damping
+        node.vx *= 0.97;
+        node.vy *= 0.97;
+
+        // Clamp speed so nodes don't fly off too fast
+        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+        if (speed > 1.2) {
+          node.vx = (node.vx / speed) * 1.2;
+          node.vy = (node.vy / speed) * 1.2;
+        }
+
+        // Apply
+        node.x += node.vx;
+        node.y += node.vy;
+        node.pulsePhase += 0.008;
+
+        // Bounce off walls so nodes stay on screen
+        if (node.x < 0) { node.x = 0; node.vx *= -0.8; }
+        if (node.x > width) { node.x = width; node.vx *= -0.8; }
+        if (node.y < 0) { node.y = 0; node.vy *= -0.8; }
+        if (node.y > height) { node.y = height; node.vy *= -0.8; }
+
+        // Subtle mouse repulsion
+        if (mouse.active) {
+          const dx = node.x - mouse.x;
+          const dy = node.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 200 && dist > 0) {
+            const influence = (1 - dist / 200) * 0.04;
+            node.vx += (dx / dist) * influence;
+            node.vy += (dy / dist) * influence;
+          }
+        }
+      }
+
+      // ─── Draw dynamic connections (close nodes connect in real time) ───
+      const connectionDistance = 160; // max distance for a connection
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i];
+          const b = nodes[j];
+
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist > connectionDistance) continue;
+
+          // Check mouse proximity to this connection
+          let mouseInfluence = 0;
+          if (mouse.active) {
+            const midX = (a.x + b.x) / 2;
+            const midY = (a.y + b.y) / 2;
+            const mDist = Math.sqrt((mouse.x - midX) ** 2 + (mouse.y - midY) ** 2);
+            if (mDist < 180) {
+              mouseInfluence = (1 - mDist / 180) * 0.6;
+            }
+          }
+
+          const baseAlpha = Math.max(0, 1 - dist / connectionDistance) * 0.25;
+          const alpha = Math.min(baseAlpha + mouseInfluence, 0.55);
+          const lineWidth = 0.5 + mouseInfluence * 1.5;
+
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`;
+          ctx.lineWidth = lineWidth;
+          ctx.stroke();
+        }
+      }
+
+      // ─── Draw nodes ───
+      for (const node of nodes) {
+        const pulse = Math.sin(node.pulsePhase) * 0.25 + 1;
+        const r = node.radius * pulse;
+
+        // Check if node is near mouse
+        let nodeGlow = 1;
+        if (mouse.active) {
+          const dx = node.x - mouse.x;
+          const dy = node.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            nodeGlow = 1 + (1 - dist / 120) * 1.5;
+          }
+        }
+
+        // Glow
+        const glowSize = r * 4 * nodeGlow;
+        const g = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize);
+        g.addColorStop(0, node.glowColor);
+        g.addColorStop(1, "transparent");
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        // Core
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r * nodeGlow, 0, Math.PI * 2);
+        ctx.fillStyle = node.color;
+        ctx.fill();
+      }
+
+      // ─── Mouse glow ───
+      if (mouse.active) {
+        const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 120);
+        g.addColorStop(0, "rgba(59, 130, 246, 0.04)");
+        g.addColorStop(1, "transparent");
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 120, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    // ─── Mouse events directly on canvas ───
+    const onMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
         x: e.clientX - rect.left,
@@ -86,268 +215,31 @@ export default function BackgroundScene() {
       };
     };
 
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000, active: false };
+    const onLeave = () => {
+      mouseRef.current = { x: -9999, y: -9999, active: false };
     };
 
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
-
-    // Animation
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      const mouse = mouseRef.current;
-      const nodes = nodesRef.current;
-      const time = Date.now() / 1000;
-
-      // Update nodes
-      nodes.forEach((node, i) => {
-        // Neural floating movement
-        node.x += node.vx + Math.sin(time + node.pulsePhase) * 0.1;
-        node.y += node.vy + Math.cos(time + node.pulsePhase) * 0.1;
-        node.pulsePhase += 0.01;
-
-        // Boundary wrap
-        if (node.x < -50) node.x = width + 50;
-        if (node.x > width + 50) node.x = -50;
-        if (node.y < -50) node.y = height + 50;
-        if (node.y > height + 50) node.y = -50;
-
-        // Hover attraction - NEURAL NETWORK EFFECT
-        if (mouse.active) {
-          const dx = mouse.x - node.x;
-          const dy = mouse.y - node.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const hoverRadius = 250;
-
-          if (dist < hoverRadius) {
-            // Strong attraction to mouse
-            const force = (1 - dist / hoverRadius) * 0.08;
-            node.x += dx * force;
-            node.y += dy * force;
-            node.isHovered = true;
-            node.targetRadius = 3 + (1 - dist / hoverRadius) * 4;
-          } else {
-            node.isHovered = false;
-            node.targetRadius = node.radius;
-            
-            // Gentle return to base position
-            const returnForce = 0.002;
-            node.x += (node.baseX - node.x) * returnForce;
-            node.y += (node.baseY - node.y) * returnForce;
-          }
-        } else {
-          node.isHovered = false;
-          node.targetRadius = node.radius;
-          
-          // Return to base
-          const returnForce = 0.002;
-          node.x += (node.baseX - node.x) * returnForce;
-          node.y += (node.baseY - node.y) * returnForce;
-        }
-
-        // Smooth radius transition
-        const currentRadius = node.radius + (node.targetRadius - node.radius) * 0.1;
-        node.radius = currentRadius;
-      });
-
-      // Draw connections - NEURAL NETWORK LINES
-      nodes.forEach((node, i) => {
-        nodes.forEach((other, j) => {
-          if (i >= j) return;
-
-          const dx = node.x - other.x;
-          const dy = node.y - other.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          // Connection distance
-          let maxDist = 180;
-          let opacity = 0;
-
-          // If mouse is active, increase connection range near mouse
-          if (mouse.active) {
-            const mouseDist1 = Math.sqrt((mouse.x - node.x) ** 2 + (mouse.y - node.y) ** 2);
-            const mouseDist2 = Math.sqrt((mouse.x - other.x) ** 2 + (mouse.y - other.y) ** 2);
-            
-            if (mouseDist1 < 250 || mouseDist2 < 250) {
-              maxDist = 300;
-              opacity = (1 - dist / maxDist) * 0.5;
-            }
-          }
-
-          if (dist < maxDist) {
-            opacity = opacity || (1 - dist / maxDist) * 0.25;
-
-            // Gradient line
-            const gradient = ctx.createLinearGradient(node.x, node.y, other.x, other.y);
-            gradient.addColorStop(0, node.color.replace(/[\d.]+\)$/, `${opacity * 0.8})`));
-            gradient.addColorStop(0.5, `rgba(147, 197, 253, ${opacity * 0.5})`);
-            gradient.addColorStop(1, other.color.replace(/[\d.]+\)$/, `${opacity * 0.8})`));
-
-            ctx.beginPath();
-            ctx.moveTo(node.x, node.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = node.isHovered || other.isHovered ? 1.5 : 0.5;
-            ctx.stroke();
-
-            // Data pulse on active connections
-            if (node.isHovered || other.isHovered) {
-              const pulsePos = (time * 2 + i * 0.3) % 1;
-              const pulseX = node.x + dx * pulsePos;
-              const pulseY = node.y + dy * pulsePos;
-              
-              ctx.beginPath();
-              ctx.arc(pulseX, pulseY, 2, 0, Math.PI * 2);
-              ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-              ctx.fill();
-            }
-          }
-        });
-      });
-
-      // Draw nodes
-      nodes.forEach((node) => {
-        const pulse = Math.sin(node.pulsePhase) * 0.3 + 1;
-        const glowSize = node.radius * pulse * 6;
-
-        // Outer glow
-        const glowGradient = ctx.createRadialGradient(
-          node.x, node.y, 0,
-          node.x, node.y, glowSize
-        );
-        glowGradient.addColorStop(0, node.glowColor);
-        glowGradient.addColorStop(1, "transparent");
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = glowGradient;
-        ctx.fill();
-
-        // Core
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius * pulse, 0, Math.PI * 2);
-        ctx.fillStyle = node.isHovered ? "rgba(255, 255, 255, 1)" : node.color;
-        ctx.fill();
-
-        // Ring for hovered nodes
-        if (node.isHovered) {
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, node.radius * pulse * 2, 0, Math.PI * 2);
-          ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-      });
-
-      // Mouse target indicator
-      if (mouse.active) {
-        // Target ring
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 20 + Math.sin(time * 3) * 5, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(147, 197, 253, 0.6)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Inner dot
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-        ctx.fill();
-
-        // Connection radius indicator
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 250, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(147, 197, 253, 0.08)";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([5, 5]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
+    canvas.addEventListener("mousemove", onMove);
+    canvas.addEventListener("mouseleave", onLeave);
+    window.addEventListener("resize", resize);
 
     resize();
-    window.addEventListener("resize", resize);
     animate();
 
     return () => {
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("resize", resize);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationRef.current);
     };
   }, []);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: 0,
-        background: "linear-gradient(180deg, #02040a 0%, #0a0e27 50%, #02040a 100%)",
-        pointerEvents: "auto", // Enable mouse interaction
-        overflow: "hidden",
-      }}
-    >
+    <div className="fixed inset-0 z-0 h-full w-full" style={{ background: "linear-gradient(180deg, #02040a 0%, #0a0e27 50%, #02040a 100%)" }}>
       <canvas
         ref={canvasRef}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          cursor: "crosshair",
-        }}
-      />
-
-      {/* Ambient glow overlays */}
-      <div
-        style={{
-          position: "absolute",
-          top: "10%",
-          left: "20%",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          animation: "float 10s ease-in-out infinite",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "15%",
-          right: "25%",
-          width: "350px",
-          height: "350px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%)",
-          filter: "blur(50px)",
-          pointerEvents: "none",
-          animation: "float 12s ease-in-out infinite reverse",
-        }}
-      />
-
-      {/* Vignette */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "radial-gradient(ellipse at center, transparent 30%, rgba(2, 4, 10, 0.6) 100%)",
-          pointerEvents: "none",
-        }}
+        className="h-full w-full"
+        style={{ cursor: "default" }}
       />
     </div>
   );
