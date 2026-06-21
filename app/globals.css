@@ -238,6 +238,25 @@
   50% { transform: translateY(-30px) scale(1.1); opacity: 1; }
 }
 
+/* Slow spin animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-slower {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@utility animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+@utility animate-spin-slower {
+  animation: spin-slower 12s linear infinite;
+}
+
 /* Selection */
 ::selection {
   background: rgba(59, 130, 246, 0.3);

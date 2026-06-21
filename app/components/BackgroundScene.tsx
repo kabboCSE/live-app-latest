@@ -1,245 +1,369 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-interface Node {
+// ─── Configuration ─────────────────────────────────────────────────────────────
+const CONFIG = {
+  particleCount: 80,
+  connectionDistance: 150,
+  mouseRadius: 200,
+  particleSpeed: 0.5,
+  particleColor: "#e0f7fa",
+  lineColor: "#e0f7fa",
+  backgroundColor: "#0a0a1a",
+} as const;
+
+// Particle radius range
+const MIN_RADIUS = 2;
+const MAX_RADIUS = 4;
+
+// ─── Utility ───────────────────────────────────────────────────────────────────
+function clamp(v: number, min: number, max: number) {
+  return v < min ? min : v > max ? max : v;
+}
+
+function dist(x1: number, y1: number, x2: number, y2: number) {
+  const dx = x1 - x2;
+  const dy = y1 - y2;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+// ─── Simple Spatial Grid (optimisation for >100 particles) ─────────────────────
+class SpatialGrid {
+  private cells: Map<number, number[]> = new Map();
+  private cellSize: number;
+  private w: number;
+  private h: number;
+
+  constructor(w: number, h: number, cellSize: number) {
+    this.w = w;
+    this.h = h;
+    this.cellSize = cellSize;
+  }
+
+  clear() {
+    this.cells.clear();
+  }
+
+  private key(cx: number, cy: number) {
+    return cy * (Math.ceil(this.w / this.cellSize) + 1) + cx;
+  }
+
+  insert(idx: number, x: number, y: number) {
+    const cx = Math.floor(x / this.cellSize);
+    const cy = Math.floor(y / this.cellSize);
+    const k = this.key(cx, cy);
+    let bucket = this.cells.get(k);
+    if (!bucket) {
+      bucket = [];
+      this.cells.set(k, bucket);
+    }
+    bucket.push(idx);
+  }
+
+  query(x: number, y: number, radius: number, out: number[]) {
+    const minCx = Math.max(0, Math.floor((x - radius) / this.cellSize));
+    const maxCx = Math.min(Math.floor(this.w / this.cellSize), Math.floor((x + radius) / this.cellSize));
+    const minCy = Math.max(0, Math.floor((y - radius) / this.cellSize));
+    const maxCy = Math.min(Math.floor(this.h / this.cellSize), Math.floor((y + radius) / this.cellSize));
+
+    for (let cy = minCy; cy <= maxCy; cy++) {
+      for (let cx = minCx; cx <= maxCx; cx++) {
+        const bucket = this.cells.get(this.key(cx, cy));
+        if (bucket) {
+          for (let i = 0; i < bucket.length; i++) {
+            out.push(bucket[i]);
+          }
+        }
+      }
+    }
+  }
+}
+
+// ─── Particle class ─────────────────────────────────────────────────────────────
+interface ParticleState {
   x: number;
   y: number;
   vx: number;
   vy: number;
   radius: number;
-  color: string;
-  glowColor: string;
-  pulsePhase: number;
-  // Randomness offset per node so each moves differently
-  driftSeed: number;
+  opacity: number; // 0.4 – 1.0
 }
 
+function createParticle(w: number, h: number): ParticleState {
+  const angle = Math.random() * Math.PI * 2;
+  const speed = CONFIG.particleSpeed * (0.6 + Math.random() * 0.8);
+  return {
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    radius: MIN_RADIUS + Math.random() * (MAX_RADIUS - MIN_RADIUS),
+    opacity: 0.4 + Math.random() * 0.6,
+  };
+}
+
+// ─── React Component ────────────────────────────────────────────────────────────
 export default function BackgroundScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
-  const nodesRef = useRef<Node[]>([]);
-  const animationRef = useRef<number>(0);
-  const dimsRef = useRef({ width: 0, height: 0 });
+  const particlesRef = useRef<ParticleState[]>([]);
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false, clicked: false, clickTime: 0 });
+  const animRef = useRef(0);
+  const dimsRef = useRef({ w: 0, h: 0 });
+  const configRef = useRef(CONFIG);
+
+  const getCount = useCallback((w: number, h: number) => {
+    const isMobile = w < 768;
+    const base = isMobile ? 40 : configRef.current.particleCount;
+    return Math.min(base, Math.max(20, Math.floor((w * h) / (isMobile ? 25000 : 18000))));
+  }, []);
 
   useEffect(() => {
+    // ─── Respect reduced motion ─────────────────────────────────────────
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // ─── Resize handler ──────────────────────────────────────────────────
     const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
       const w = window.innerWidth;
       const h = window.innerHeight;
-      dimsRef.current = { width: w, height: h };
-      canvas.width = w;
-      canvas.height = h;
-      initNodes();
-    };
+      dimsRef.current = { w, h };
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const palette = [
-      { node: "rgba(147, 197, 253, 0.85)", glow: "rgba(59, 130, 246, 0.25)" },
-      { node: "rgba(196, 181, 253, 0.75)", glow: "rgba(139, 92, 246, 0.2)" },
-      { node: "rgba(165, 243, 252, 0.65)", glow: "rgba(6, 182, 212, 0.2)" },
-    ];
-
-    const initNodes = () => {
-      const { width, height } = dimsRef.current;
-      const count = Math.min(70, Math.floor((width * height) / 18000));
-      const nodes: Node[] = [];
-
+      // Re-initialise particles
+      const count = getCount(w, h);
+      const particles: ParticleState[] = [];
       for (let i = 0; i < count; i++) {
-        const c = palette[Math.floor(Math.random() * palette.length)];
-        nodes.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          radius: Math.random() * 1.2 + 0.6,
-          color: c.node,
-          glowColor: c.glow,
-          pulsePhase: Math.random() * Math.PI * 2,
-          driftSeed: Math.random() * 1000,
-        });
+        particles.push(createParticle(w, h));
       }
-
-      nodesRef.current = nodes;
+      particlesRef.current = particles;
     };
+
+    // ─── Animation ───────────────────────────────────────────────────────
+    let useSpatial = false;
 
     const animate = () => {
-      const { width, height } = dimsRef.current;
-      const nodes = nodesRef.current;
+      const { w, h } = dimsRef.current;
+      const particles = particlesRef.current;
       const mouse = mouseRef.current;
-      const time = Date.now() / 1000;
+      const cfg = configRef.current;
 
-      ctx.clearRect(0, 0, width, height);
+      // Clear
+      ctx.clearRect(0, 0, w, h);
 
-      // ─── Update nodes — random movement ───
-      for (const node of nodes) {
-        // Random drift — each node has its own unique wandering pattern
-        node.vx += Math.sin(time * 0.3 + node.driftSeed) * 0.012;
-        node.vy += Math.cos(time * 0.4 + node.driftSeed * 1.3) * 0.012;
+      // ── Update particles ───────────────────────────────────────────────
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
 
-        // Occasional random jolts for more natural random movement
-        node.vx += Math.sin(time * 0.7 + node.driftSeed * 2.1) * 0.006;
-        node.vy += Math.cos(time * 0.9 + node.driftSeed * 1.7) * 0.006;
-
-        // Damping
-        node.vx *= 0.97;
-        node.vy *= 0.97;
-
-        // Clamp speed so nodes don't fly off too fast
-        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
-        if (speed > 1.2) {
-          node.vx = (node.vx / speed) * 1.2;
-          node.vy = (node.vy / speed) * 1.2;
+        // Bounce off walls
+        if (p.x < 0) {
+          p.x = 0;
+          p.vx *= -1;
+        } else if (p.x > w) {
+          p.x = w;
+          p.vx *= -1;
+        }
+        if (p.y < 0) {
+          p.y = 0;
+          p.vy *= -1;
+        } else if (p.y > h) {
+          p.y = h;
+          p.vy *= -1;
         }
 
-        // Apply
-        node.x += node.vx;
-        node.y += node.vy;
-        node.pulsePhase += 0.008;
-
-        // Bounce off walls so nodes stay on screen
-        if (node.x < 0) { node.x = 0; node.vx *= -0.8; }
-        if (node.x > width) { node.x = width; node.vx *= -0.8; }
-        if (node.y < 0) { node.y = 0; node.vy *= -0.8; }
-        if (node.y > height) { node.y = height; node.vy *= -0.8; }
-
-        // Subtle mouse repulsion
+        // Mouse interaction — "magnet" attraction
         if (mouse.active) {
-          const dx = node.x - mouse.x;
-          const dy = node.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 200 && dist > 0) {
-            const influence = (1 - dist / 200) * 0.04;
-            node.vx += (dx / dist) * influence;
-            node.vy += (dy / dist) * influence;
+          const d = dist(p.x, p.y, mouse.x, mouse.y);
+          if (d < cfg.mouseRadius && d > 0.5) {
+            const strength = (1 - d / cfg.mouseRadius) * 0.02;
+            p.vx += ((mouse.x - p.x) / d) * strength;
+            p.vy += ((mouse.y - p.y) / d) * strength;
           }
         }
-      }
 
-      // ─── Draw dynamic connections (close nodes connect in real time) ───
-      const connectionDistance = 160; // max distance for a connection
-
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i];
-          const b = nodes[j];
-
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist > connectionDistance) continue;
-
-          // Check mouse proximity to this connection
-          let mouseInfluence = 0;
-          if (mouse.active) {
-            const midX = (a.x + b.x) / 2;
-            const midY = (a.y + b.y) / 2;
-            const mDist = Math.sqrt((mouse.x - midX) ** 2 + (mouse.y - midY) ** 2);
-            if (mDist < 180) {
-              mouseInfluence = (1 - mDist / 180) * 0.6;
+        // Click ripple push
+        if (mouse.clicked) {
+          const elapsed = Date.now() - mouse.clickTime;
+          if (elapsed < 400) {
+            const d = dist(p.x, p.y, mouse.x, mouse.y);
+            if (d < 250 && d > 0.5) {
+              const force = (1 - d / 250) * (1 - elapsed / 400) * 1.2;
+              p.vx += ((p.x - mouse.x) / d) * force;
+              p.vy += ((p.y - mouse.y) / d) * force;
             }
-          }
-
-          const baseAlpha = Math.max(0, 1 - dist / connectionDistance) * 0.25;
-          const alpha = Math.min(baseAlpha + mouseInfluence, 0.55);
-          const lineWidth = 0.5 + mouseInfluence * 1.5;
-
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`;
-          ctx.lineWidth = lineWidth;
-          ctx.stroke();
-        }
-      }
-
-      // ─── Draw nodes ───
-      for (const node of nodes) {
-        const pulse = Math.sin(node.pulsePhase) * 0.25 + 1;
-        const r = node.radius * pulse;
-
-        // Check if node is near mouse
-        let nodeGlow = 1;
-        if (mouse.active) {
-          const dx = node.x - mouse.x;
-          const dy = node.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            nodeGlow = 1 + (1 - dist / 120) * 1.5;
+          } else {
+            mouse.clicked = false;
           }
         }
 
-        // Glow
-        const glowSize = r * 4 * nodeGlow;
-        const g = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize);
-        g.addColorStop(0, node.glowColor);
-        g.addColorStop(1, "transparent");
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        // Core
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, r * nodeGlow, 0, Math.PI * 2);
-        ctx.fillStyle = node.color;
-        ctx.fill();
+        // Clamp speed
+        const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        const maxSpd = cfg.particleSpeed * 2.5;
+        if (spd > maxSpd) {
+          p.vx = (p.vx / spd) * maxSpd;
+          p.vy = (p.vy / spd) * maxSpd;
+        }
       }
 
-      // ─── Mouse glow ───
-      if (mouse.active) {
-        const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 120);
-        g.addColorStop(0, "rgba(59, 130, 246, 0.04)");
-        g.addColorStop(1, "transparent");
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 120, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
+      // ── Build spatial grid if needed ──────────────────────────────────
+      useSpatial = particles.length > 100;
+      const grid = useSpatial ? new SpatialGrid(w, h, cfg.connectionDistance) : null;
+      if (grid) {
+        grid.clear();
+        for (let i = 0; i < particles.length; i++) {
+          grid.insert(i, particles[i].x, particles[i].y);
+        }
       }
 
-      animationRef.current = requestAnimationFrame(animate);
-    };
+      // ── Draw connections ──────────────────────────────────────────────
+      const pairSet = new Set<string>();
+      const connectionCounts = new Uint8Array(particles.length);
 
-    // ─── Mouse events directly on canvas ───
-    const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        active: true,
+      const maybeDrawLine = (i: number, j: number) => {
+        const a = particles[i];
+        const b = particles[j];
+        const d = dist(a.x, a.y, b.x, b.y);
+        if (d >= cfg.connectionDistance) return;
+
+        const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+        if (pairSet.has(key)) return;
+        pairSet.add(key);
+
+        // Limit connections per particle
+        if (connectionCounts[i] >= 4 || connectionCounts[j] >= 4) return;
+        connectionCounts[i]++;
+        connectionCounts[j]++;
+
+        const alpha = (1 - d / cfg.connectionDistance) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(224, 247, 250, ${alpha})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
       };
+
+      if (grid) {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const neighbors: number[] = [];
+          grid.query(p.x, p.y, cfg.connectionDistance, neighbors);
+          for (let k = 0; k < neighbors.length; k++) {
+            const j = neighbors[k];
+            if (j <= i) continue;
+            maybeDrawLine(i, j);
+          }
+        }
+      } else {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            maybeDrawLine(i, j);
+          }
+        }
+      }
+
+      // ── Draw mouse connections ────────────────────────────────────────
+      if (mouse.active) {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const d = dist(p.x, p.y, mouse.x, mouse.y);
+          if (d < cfg.mouseRadius) {
+            const alpha = (1 - d / cfg.mouseRadius) * 0.4;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(224, 247, 250, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // ── Draw particles ────────────────────────────────────────────────
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(224, 247, 250, ${p.opacity})`;
+        ctx.fill();
+      }
+
+      animRef.current = requestAnimationFrame(animate);
     };
 
-    const onLeave = () => {
-      mouseRef.current = { x: -9999, y: -9999, active: false };
+    // ─── Event handlers ──────────────────────────────────────────────────
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current.x = e.clientX - rect.left;
+      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.active = true;
     };
 
-    canvas.addEventListener("mousemove", onMove);
-    canvas.addEventListener("mouseleave", onLeave);
+    const onPointerLeave = () => {
+      mouseRef.current.active = false;
+      mouseRef.current.x = -9999;
+      mouseRef.current.y = -9999;
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current.x = e.clientX - rect.left;
+      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.active = true;
+      mouseRef.current.clicked = true;
+      mouseRef.current.clickTime = Date.now();
+    };
+
+    // ─── Page Visibility — pause when tab hidden ────────────────────────
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animRef.current);
+      } else {
+        animRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerleave", onPointerLeave);
+    canvas.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("resize", resize);
+    document.addEventListener("visibilitychange", onVisibility);
 
     resize();
     animate();
 
     return () => {
-      canvas.removeEventListener("mousemove", onMove);
-      canvas.removeEventListener("mouseleave", onLeave);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerleave", onPointerLeave);
+      canvas.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationRef.current);
+      document.removeEventListener("visibilitychange", onVisibility);
+      cancelAnimationFrame(animRef.current);
     };
-  }, []);
+  }, [getCount]);
 
   return (
-    <div className="fixed inset-0 z-0 h-full w-full" style={{ background: "linear-gradient(180deg, #02040a 0%, #0a0e27 50%, #02040a 100%)" }}>
+    <div
+      className="fixed inset-0 z-0 h-full w-full"
+      style={{
+        background: `linear-gradient(145deg, #0a0a1a 0%, #111128 50%, #0a0a1a 100%)`,
+        pointerEvents: "none",
+      }}
+    >
       <canvas
         ref={canvasRef}
         className="h-full w-full"
-        style={{ cursor: "default" }}
+        style={{ display: "block", pointerEvents: "auto" }}
       />
     </div>
   );

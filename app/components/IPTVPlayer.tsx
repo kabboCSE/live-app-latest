@@ -1,8 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Tv, Radio, Upload, AlertCircle, ShieldAlert } from "lucide-react";
-import { FaGithub } from "react-icons/fa6";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
+import {
+  Tv,
+  Radio,
+  Upload,
+  AlertCircle,
+  ShieldAlert,
+  Star,
+} from "lucide-react";
+import { FaGithub, FaTelegram } from "react-icons/fa6";
 
 // Hooks & Types
 import { useIPTVPlaylists, Channel } from "../hooks/useIPTVPlaylists";
@@ -15,8 +28,12 @@ import { PlaylistSidebarView } from "./player/PlaylistSidebarView";
 import { ChannelListView } from "./player/ChannelListView";
 import { PlaylistManagerView } from "./player/PlaylistManagerView";
 
+// Password Modal
+import { PasswordModal, isUniversalUnlocked } from "./player/PasswordModal";
+
 export default function IPTVPlayer() {
   const [retryKey, setRetryKey] = useState(0);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   // 1. Playlists and active channels state management via hook
   const {
@@ -99,14 +116,18 @@ export default function IPTVPlayer() {
         }, 100);
       }
     },
-    [setSelectedChannel, initializeStream, playerWrapperRef]
+    [setSelectedChannel, initializeStream, playerWrapperRef],
   );
 
   const playTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 4. Automatic channel switch if playback doesn't start in 30 seconds
   useEffect(() => {
-    if (!selectedChannel || playerStatus === "playing" || playerStatus === "idle") {
+    if (
+      !selectedChannel ||
+      playerStatus === "playing" ||
+      playerStatus === "idle"
+    ) {
       if (playTimeoutRef.current) {
         clearTimeout(playTimeoutRef.current);
         playTimeoutRef.current = null;
@@ -119,13 +140,15 @@ export default function IPTVPlayer() {
     }
 
     playTimeoutRef.current = setTimeout(() => {
-      console.log("Playback failed to start within 30 seconds, switching to next channel...");
+      console.log(
+        "Playback failed to start within 30 seconds, switching to next channel...",
+      );
 
       setChannels((currentChannels) => {
         if (currentChannels.length <= 1) return currentChannels;
 
         const currentIndex = currentChannels.findIndex(
-          (c) => c.id === selectedChannel.id || c.url === selectedChannel.url
+          (c) => c.id === selectedChannel.id || c.url === selectedChannel.url,
         );
         if (currentIndex !== -1) {
           const nextIndex = (currentIndex + 1) % currentChannels.length;
@@ -144,24 +167,37 @@ export default function IPTVPlayer() {
         playTimeoutRef.current = null;
       }
     };
-  }, [selectedChannel, playerStatus, retryKey, handleChannelSelect, setChannels]);
+  }, [
+    selectedChannel,
+    playerStatus,
+    retryKey,
+    handleChannelSelect,
+    setChannels,
+  ]);
 
   // 5. Memoized categories and channel collections
-  const categories = useMemo(() => [
-    "All",
-    ...Array.from(new Set(channels.map((c) => c.group))),
-  ], [channels]);
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(channels.map((c) => c.group)))],
+    [channels],
+  );
 
-  const filteredChannels = useMemo(() => channels.filter((c) => {
-    const matchesCategory =
-      selectedCategory === "All" || c.group === selectedCategory;
-    const matchesSearch = c.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  }), [channels, selectedCategory, searchQuery]);
+  const filteredChannels = useMemo(
+    () =>
+      channels.filter((c) => {
+        const matchesCategory =
+          selectedCategory === "All" || c.group === selectedCategory;
+        const matchesSearch = c.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      }),
+    [channels, selectedCategory, searchQuery],
+  );
 
-  const visibleChannels = useMemo(() => filteredChannels.slice(0, displayCount), [filteredChannels, displayCount]);
+  const visibleChannels = useMemo(
+    () => filteredChannels.slice(0, displayCount),
+    [filteredChannels, displayCount],
+  );
   const hasMore = displayCount < filteredChannels.length;
 
   return (
@@ -247,7 +283,10 @@ export default function IPTVPlayer() {
               <div className="h-10 bg-white/5 rounded-xl sm:rounded-2xl w-full" />
               <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                 {Array.from({ length: 6 }).map((_, idx) => (
-                  <div key={idx} className="h-8 bg-white/5 rounded-lg sm:rounded-xl w-16 sm:w-20 flex-shrink-0" />
+                  <div
+                    key={idx}
+                    className="h-8 bg-white/5 rounded-lg sm:rounded-xl w-16 sm:w-20 flex-shrink-0"
+                  />
                 ))}
               </div>
             </div>
@@ -307,7 +346,15 @@ export default function IPTVPlayer() {
             </div>
             <p className="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed select-text flex-1">
               <span className="text-amber-400 font-black">Notice: </span>
-              If you encounter a blank or black screen, please click the <span className="text-emerald-400 font-bold">Reload Stream</span> button in the player controls or <span className="text-emerald-400 font-bold">Try Reconnecting</span>.
+              If you encounter a blank or black screen, please click the{" "}
+              <span className="text-emerald-400 font-bold">
+                Reload Stream
+              </span>{" "}
+              button in the player controls or{" "}
+              <span className="text-emerald-400 font-bold">
+                Try Reconnecting
+              </span>
+              .
             </p>
           </div>
 
@@ -326,6 +373,7 @@ export default function IPTVPlayer() {
               setActivePlaylistId={setActivePlaylistId}
               setPlaylistTab={setPlaylistTab}
               handleDeletePlaylist={handleDeletePlaylist}
+              onUniversalClick={() => setShowPasswordModal(true)}
             />
 
             <div className="w-full lg:w-2/3 xl:w-3/4 glass-card p-4 sm:p-6 border border-white/10 sm:border-white/5 rounded-2xl md:rounded-3xl bg-white/[0.01] flex flex-col h-[600px] sm:h-[700px]">
@@ -361,7 +409,8 @@ export default function IPTVPlayer() {
                       <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs text-zinc-300 select-none">
                         <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
                         <span className="text-white font-bold whitespace-nowrap">
-                          {viewerCount} {viewerCount === 1 ? "Watcher" : "Watchers"}
+                          {viewerCount}{" "}
+                          {viewerCount === 1 ? "Watcher" : "Watchers"}
                         </span>
                       </div>
                       <div className="hidden sm:block h-4 w-[1px] bg-white/10 mx-1 flex-shrink-0" />
@@ -418,28 +467,37 @@ export default function IPTVPlayer() {
           {/* Page Footer */}
           <div className="w-full pt-4 md:pt-6 pb-2">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-              <p className="text-zinc-500 text-[10px] sm:text-xs font-medium">
-                Watch premium live TV channels directly from official stream sources.
-              </p>
-              <div className="flex items-center gap-2">
-                <span className="text-white font-bold text-[11px] sm:text-xs gradient-text">
-                  Md. Shahriar Kabbo
-                </span>
-                <span className="text-zinc-600 text-[10px]">|</span>
+              <p className="text-zinc-500 text-[10px] sm:text-xs font-medium flex items-center gap-1.5">
+                <Star
+                  size={10}
+                  className="text-amber-400/70 fill-amber-400/70"
+                />
+                Developed by{" "}
                 <a
-                  href="https://t.me/SHAJON"
+                  href="https://kabbocse.github.io/portfolio/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] sm:text-[10.5px] text-zinc-400 font-medium hover:text-emerald-400 transition-colors"
+                  className="text-white font-bold gradient-text hover:text-emerald-300 transition-colors"
                 >
-                  Telegram support
+                  Shahriar Kabbo
                 </a>
-                <span className="text-zinc-600 text-[10px]">·</span>
+              </p>
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://t.me/Kabbo512"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#26A5E4]/10 hover:bg-[#26A5E4]/20 border border-[#26A5E4]/20 text-[10px] text-[#26A5E4] hover:text-[#26A5E4] transition-all"
+                  title="Contact on Telegram"
+                >
+                  <FaTelegram size={12} />
+                  <span>Telegram</span>
+                </a>
                 <a
                   href="https://github.com/Shahriar-Kabbo/iptv"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] text-[10px] text-zinc-400 hover:text-emerald-300 transition-all"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] text-[10px] text-zinc-400 hover:text-emerald-300 transition-all"
                 >
                   <FaGithub size={11} />
                   <span>GitHub</span>
@@ -449,6 +507,17 @@ export default function IPTVPlayer() {
           </div>
         </div>
       )}
+
+      {/* Password Modal for Universal Playlist */}
+      <PasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSuccess={() => {
+          setShowPasswordModal(false);
+          setActivePlaylistId("universal");
+          setPlaylistTab("browse");
+        }}
+      />
     </div>
   );
 }

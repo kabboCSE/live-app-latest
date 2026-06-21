@@ -2,39 +2,39 @@ import type { Metadata } from "next";
 import AboutView from "../components/AboutView";
 
 export const metadata: Metadata = {
-  title: "About the Developer — S. SHAJON | IPTV Player",
+  title: "About the Developer — Md. Shahriar Kabbo | IPTV Player",
   description:
-    "Learn more about S. SHAJON, the self-learned developer and reverse engineer behind this premium open-source IPTV web player. Get contact options and official GitHub links.",
+    "Learn more about Md. Shahriar Kabbo, an SQA engineer and MERN stack developer behind this premium open-source IPTV web player. Get contact options and official GitHub links.",
   keywords: [
-    "S. SHAJON",
+    "Md. Shahriar Kabbo",
+    "Shahriar Kabbo",
     "developer",
     "creator",
-    "IPTV creator",
+    "SQA engineer",
+    "MERN stack developer",
     "IPTV Web Player support",
-    "Telegram SHAJON",
     "open source IPTV",
-    "SHAJON-404",
-    "shajon-dev",
-    "shajon github"
+    "kabboCSE",
+    "shahriar kabbo github"
   ],
   alternates: {
     canonical: "/about",
   },
   openGraph: {
     type: "profile",
-    username: "SHAJON-404",
-    firstName: "Shah",
-    lastName: "Makhdum Shajon",
+    username: "kabboCSE",
+    firstName: "Md. Shahriar",
+    lastName: "Kabbo",
     url: "/about",
-    title: "About the Developer — S. SHAJON",
+    title: "About the Developer — Md. Shahriar Kabbo",
     description:
-      "Self-learned developer and reverse engineer behind the premium open-source IPTV web streaming player.",
+      "SQA engineer at Akij iBOS and MERN stack developer behind the premium open-source IPTV web streaming player.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://i.ibb.co.com/04vzP6z/logo.png",
         width: 1200,
         height: 630,
-        alt: "About S. SHAJON - IPTV Player Developer",
+        alt: "About Md. Shahriar Kabbo - IPTV Player Developer",
       },
     ],
   },

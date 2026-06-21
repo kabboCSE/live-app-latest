@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { List, Tv, Link as LinkIcon, FileText, Check, Trash2 } from "lucide-react";
+import { List, Tv, Link as LinkIcon, FileText, Check, Trash2, Lock } from "lucide-react";
 import { Playlist, getIsIOS } from "../../hooks/useIPTVPlaylists";
+import { isUniversalUnlocked } from "./PasswordModal";
 
 interface PlaylistSidebarViewProps {
   playlists: Playlist[];
@@ -10,6 +11,7 @@ interface PlaylistSidebarViewProps {
   setActivePlaylistId: (id: string) => void;
   setPlaylistTab: (tab: "browse" | "manage") => void;
   handleDeletePlaylist: (id: string, e: React.MouseEvent) => void;
+  onUniversalClick?: () => void;
 }
 
 export function PlaylistSidebarView({
@@ -18,6 +20,7 @@ export function PlaylistSidebarView({
   setActivePlaylistId,
   setPlaylistTab,
   handleDeletePlaylist,
+  onUniversalClick,
 }: PlaylistSidebarViewProps) {
   return (
     <div className="w-full lg:w-1/3 xl:w-1/4 glass-card p-4 sm:p-6 border border-white/10 sm:border-white/5 rounded-2xl md:rounded-3xl bg-white/[0.01] flex flex-col max-h-[280px] lg:max-h-none lg:h-[600px] xl:h-[700px]">
@@ -42,6 +45,10 @@ export function PlaylistSidebarView({
             <div
               key={pl.id}
               onClick={() => {
+                if (pl.id === "universal" && !isUniversalUnlocked()) {
+                  onUniversalClick?.();
+                  return;
+                }
                 setActivePlaylistId(pl.id);
                 setPlaylistTab("browse");
               }}
@@ -75,7 +82,17 @@ export function PlaylistSidebarView({
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2">
-                {isActive && (
+                {pl.id === "universal" && !isUniversalUnlocked() && (
+                  <span className="p-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30" title="Password Protected">
+                    <Lock size={10} className="sm:w-3 sm:h-3" />
+                  </span>
+                )}
+                {pl.id === "universal" && isUniversalUnlocked() && isActive && (
+                  <span className="p-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <Check size={10} className="sm:w-3 sm:h-3 stroke-[3]" />
+                  </span>
+                )}
+                {isActive && pl.id !== "universal" && (
                   <span className="p-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     <Check size={10} className="sm:w-3 sm:h-3 stroke-[3]" />
                   </span>

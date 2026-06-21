@@ -56,7 +56,7 @@ const faqs = [
     id: "faq-6",
     question: "How can I contact support or request channels?",
     answer:
-      "For any queries, suggestions, or technical support, please contact the developer via Telegram only (@SHAJON). You can also follow our official GitHub repository (SHAJON-404/iptv) for code updates, bug reports, and new features.",
+      "For any queries, suggestions, or technical support, please contact the developer via Telegram only (@KABBO). You can also follow our official GitHub repository () for code updates, bug reports, and new features.",
     icon: MessageCircle,
   },
 ];
@@ -179,7 +179,7 @@ export default function FAQPage() {
             </p>
             <div className="pt-2">
               <a
-                href="https://t.me/SHAJON"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/95 text-white font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-md shadow-primary/10 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"

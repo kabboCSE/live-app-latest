@@ -55,9 +55,6 @@ We will acknowledge your report, investigate the issue, and release a fix as soo
 ## ✉️ Contact Information
 
 If you have a security concern or a DMCA removal request, please contact the lead developer directly:
-
-* **Telegram (Preferred)**: [t.me/SHAJON](https://t.me/SHAJON) (Direct Username: `@SHAJON`)
-* **Email**: [shahmakhdumshajon@gmail.com](mailto:shahmakhdumshajon@gmail.com)
-* **GitHub Issues**: [Open an Issue](https://github.com/SHAJON-404/iptv/issues) *(Use this only if private channels are unreachable, specifying that it is a takedown request)*
+specifying that it is a takedown request)*
 
 We appreciate your cooperation in keeping this project secure, compliant, and open-source!
