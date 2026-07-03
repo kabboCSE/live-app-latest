@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { WorldCupData } from "../types";
-import { convertTimeToDhaka, calculateGroupStandings, resolveTeamName } from "../utils/helpers";
+import {
+  convertTimeToDhaka,
+  calculateGroupStandings,
+  resolveTeamName,
+} from "../utils/helpers";
 import { COUNTRY_CODES } from "../utils/constants";
 
 const CACHE_KEY = "worldcup_fixtures_data";
@@ -12,12 +16,16 @@ export function useFixtures() {
   const [error, setError] = useState<string | null>(null);
 
   // Tabs: 'fixtures' or 'bracket'
-  const [activeTab, setActiveTab] = useState<"fixtures" | "bracket">("fixtures");
+  const [activeTab, setActiveTab] = useState<"fixtures" | "bracket">(
+    "fixtures",
+  );
 
   // Filters for fixtures list
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedGroup, setSelectedGroup] = useState<string>("All");
-  const [statusFilter, setStatusFilter] = useState<"all" | "played" | "upcoming">("upcoming");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "played" | "upcoming"
+  >("upcoming");
 
   const fetchFixtures = async (force = false) => {
     try {
@@ -35,21 +43,27 @@ export function useFixtures() {
 
       setLoading(true);
       setError(null);
-      const url = "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2026/worldcup.json";
+      const url =
+        "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2026/worldcup.json";
       const res = await fetch(url);
       if (!res.ok) {
         throw new Error(`Failed to fetch fixtures: ${res.status}`);
       }
       const jsonData = await res.json();
-      
-      localStorage.setItem(CACHE_KEY, JSON.stringify({
-        timestamp: Date.now(),
-        data: jsonData
-      }));
+
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          timestamp: Date.now(),
+          data: jsonData,
+        }),
+      );
       setData(jsonData);
     } catch (err: unknown) {
       console.error(err);
-      setError("Unable to connect to the server. Please check your internet connection.");
+      setError(
+        "Unable to connect to the server. Please check your internet connection.",
+      );
     } finally {
       setLoading(false);
     }
@@ -71,22 +85,15 @@ export function useFixtures() {
 
   const handleRetry = () => fetchFixtures(true);
 
-  // Forces the bracket tab to revert to fixtures if resized to mobile width
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768 && activeTab === "bracket") {
-        setActiveTab("fixtures");
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeTab]);
+  // No longer force-revert bracket tab on mobile - users can now view bracket on any screen size
 
   // Convert time for all matches
   const processedMatches = data
     ? data.matches.map((match) => {
-        const { date, time, formattedDateTime } = convertTimeToDhaka(match.date, match.time);
+        const { date, time, formattedDateTime } = convertTimeToDhaka(
+          match.date,
+          match.time,
+        );
         return {
           ...match,
           originalDate: match.date,
@@ -104,8 +111,16 @@ export function useFixtures() {
   // Filter matches based on criteria and map to resolved names
   const filteredMatches = processedMatches
     .map((match) => {
-      const resolvedTeam1 = resolveTeamName(match.team1, processedMatches, groupStandings);
-      const resolvedTeam2 = resolveTeamName(match.team2, processedMatches, groupStandings);
+      const resolvedTeam1 = resolveTeamName(
+        match.team1,
+        processedMatches,
+        groupStandings,
+      );
+      const resolvedTeam2 = resolveTeamName(
+        match.team2,
+        processedMatches,
+        groupStandings,
+      );
       return {
         ...match,
         team1: resolvedTeam1,
@@ -114,7 +129,8 @@ export function useFixtures() {
     })
     .filter((match) => {
       // Valid if both teams exist in COUNTRY_CODES
-      const isValidMatch = !!COUNTRY_CODES[match.team1] && !!COUNTRY_CODES[match.team2];
+      const isValidMatch =
+        !!COUNTRY_CODES[match.team1] && !!COUNTRY_CODES[match.team2];
       if (!isValidMatch) return false;
 
       // Search filter (handles team names, ground, round)
@@ -127,7 +143,8 @@ export function useFixtures() {
         match.round.toLowerCase().includes(query);
 
       // Group filter
-      const matchesGroup = selectedGroup === "All" || match.group === selectedGroup;
+      const matchesGroup =
+        selectedGroup === "All" || match.group === selectedGroup;
 
       // Status filter
       const hasScore = !!match.score;
@@ -147,8 +164,18 @@ export function useFixtures() {
   // Group options in matches
   const groupOptions = [
     "All",
-    "Group A", "Group B", "Group C", "Group D", "Group E", "Group F",
-    "Group G", "Group H", "Group I", "Group J", "Group K", "Group L"
+    "Group A",
+    "Group B",
+    "Group C",
+    "Group D",
+    "Group E",
+    "Group F",
+    "Group G",
+    "Group H",
+    "Group I",
+    "Group J",
+    "Group K",
+    "Group L",
   ];
 
   return {

@@ -63,9 +63,15 @@ class SpatialGrid {
 
   query(x: number, y: number, radius: number, out: number[]) {
     const minCx = Math.max(0, Math.floor((x - radius) / this.cellSize));
-    const maxCx = Math.min(Math.floor(this.w / this.cellSize), Math.floor((x + radius) / this.cellSize));
+    const maxCx = Math.min(
+      Math.floor(this.w / this.cellSize),
+      Math.floor((x + radius) / this.cellSize),
+    );
     const minCy = Math.max(0, Math.floor((y - radius) / this.cellSize));
-    const maxCy = Math.min(Math.floor(this.h / this.cellSize), Math.floor((y + radius) / this.cellSize));
+    const maxCy = Math.min(
+      Math.floor(this.h / this.cellSize),
+      Math.floor((y + radius) / this.cellSize),
+    );
 
     for (let cy = minCy; cy <= maxCy; cy++) {
       for (let cx = minCx; cx <= maxCx; cx++) {
@@ -107,7 +113,13 @@ function createParticle(w: number, h: number): ParticleState {
 export default function BackgroundScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<ParticleState[]>([]);
-  const mouseRef = useRef({ x: -9999, y: -9999, active: false, clicked: false, clickTime: 0 });
+  const mouseRef = useRef({
+    x: -9999,
+    y: -9999,
+    active: false,
+    clicked: false,
+    clickTime: 0,
+  });
   const animRef = useRef(0);
   const dimsRef = useRef({ w: 0, h: 0 });
   const configRef = useRef(CONFIG);
@@ -115,12 +127,17 @@ export default function BackgroundScene() {
   const getCount = useCallback((w: number, h: number) => {
     const isMobile = w < 768;
     const base = isMobile ? 40 : configRef.current.particleCount;
-    return Math.min(base, Math.max(20, Math.floor((w * h) / (isMobile ? 25000 : 18000))));
+    return Math.min(
+      base,
+      Math.max(20, Math.floor((w * h) / (isMobile ? 25000 : 18000))),
+    );
   }, []);
 
   useEffect(() => {
     // ─── Respect reduced motion ─────────────────────────────────────────
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (prefersReduced) return;
 
     const canvas = canvasRef.current;
@@ -218,7 +235,9 @@ export default function BackgroundScene() {
 
       // ── Build spatial grid if needed ──────────────────────────────────
       useSpatial = particles.length > 100;
-      const grid = useSpatial ? new SpatialGrid(w, h, cfg.connectionDistance) : null;
+      const grid = useSpatial
+        ? new SpatialGrid(w, h, cfg.connectionDistance)
+        : null;
       if (grid) {
         grid.clear();
         for (let i = 0; i < particles.length; i++) {
@@ -301,29 +320,6 @@ export default function BackgroundScene() {
       animRef.current = requestAnimationFrame(animate);
     };
 
-    // ─── Event handlers ──────────────────────────────────────────────────
-    const onPointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-      mouseRef.current.active = true;
-    };
-
-    const onPointerLeave = () => {
-      mouseRef.current.active = false;
-      mouseRef.current.x = -9999;
-      mouseRef.current.y = -9999;
-    };
-
-    const onPointerDown = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-      mouseRef.current.active = true;
-      mouseRef.current.clicked = true;
-      mouseRef.current.clickTime = Date.now();
-    };
-
     // ─── Page Visibility — pause when tab hidden ────────────────────────
     const onVisibility = () => {
       if (document.hidden) {
@@ -333,9 +329,6 @@ export default function BackgroundScene() {
       }
     };
 
-    canvas.addEventListener("pointermove", onPointerMove);
-    canvas.addEventListener("pointerleave", onPointerLeave);
-    canvas.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("resize", resize);
     document.addEventListener("visibilitychange", onVisibility);
 
@@ -343,9 +336,6 @@ export default function BackgroundScene() {
     animate();
 
     return () => {
-      canvas.removeEventListener("pointermove", onPointerMove);
-      canvas.removeEventListener("pointerleave", onPointerLeave);
-      canvas.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibility);
       cancelAnimationFrame(animRef.current);
@@ -363,7 +353,7 @@ export default function BackgroundScene() {
       <canvas
         ref={canvasRef}
         className="h-full w-full"
-        style={{ display: "block", pointerEvents: "auto" }}
+        style={{ display: "block", pointerEvents: "none" }}
       />
     </div>
   );

@@ -60,7 +60,7 @@ export default function FixturesClient() {
   const rightQF = [99, 100];
 
   return (
-    <main className="relative min-h-screen text-white overflow-hidden pb-24 md:pb-8">
+    <main className="relative min-h-screen text-white pb-24 md:pb-8">
       <BackgroundScene />
       <div className="relative z-10">
         <Header />
@@ -96,7 +96,10 @@ export default function FixturesClient() {
               className="text-xs sm:text-sm text-zinc-400 font-medium max-w-xl mx-auto leading-relaxed"
             >
               All times mentioned here are in{" "}
-              <span className="text-primary font-bold">Bangladesh Standard Time (Asia/Dhaka)</span>.
+              <span className="text-primary font-bold">
+                Bangladesh Standard Time (Asia/Dhaka)
+              </span>
+              .
             </motion.p>
 
             <motion.div
@@ -110,7 +113,14 @@ export default function FixturesClient() {
                 disabled={loading}
                 className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/40 transition-all text-xs font-bold text-primary hover:text-white cursor-pointer shadow-[0_0_15px_rgba(139,92,246,0.1)] hover:shadow-[0_0_20px_rgba(139,92,246,0.2)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <RefreshCw size={14} className={loading ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"} />
+                <RefreshCw
+                  size={14}
+                  className={
+                    loading
+                      ? "animate-spin"
+                      : "group-hover:rotate-180 transition-transform duration-500"
+                  }
+                />
                 {loading ? "Fetching..." : "Fetch Latest Data"}
               </button>
             </motion.div>
@@ -144,11 +154,12 @@ export default function FixturesClient() {
           {/* Main Loaded View */}
           {!error && data && (
             <div className="space-y-6">
-              {/* Tabs Navigation (desktop only) */}
-              <div className="hidden md:flex items-center justify-center p-1 rounded-2xl border border-white/10 bg-white/[0.02] max-w-sm mx-auto backdrop-blur-md">
+              {/* Tabs Navigation */}
+              <div className="flex items-center justify-center p-1 rounded-2xl border border-white/10 bg-white/[0.02] w-full max-w-sm mx-auto backdrop-blur-md relative z-30">
                 <button
+                  type="button"
                   onClick={() => setActiveTab("fixtures")}
-                  className={`flex-1 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`flex-1 py-3 text-[10px] sm:text-sm font-black rounded-xl transition-all duration-300 cursor-pointer whitespace-nowrap touch-manipulation ${
                     activeTab === "fixtures"
                       ? "bg-primary text-white shadow-md shadow-primary/20"
                       : "text-zinc-400 hover:text-white"
@@ -157,8 +168,9 @@ export default function FixturesClient() {
                   Fixtures & Results
                 </button>
                 <button
+                  type="button"
                   onClick={() => setActiveTab("bracket")}
-                  className={`flex-1 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`flex-1 py-3 text-[10px] sm:text-sm font-black rounded-xl transition-all duration-300 cursor-pointer whitespace-nowrap touch-manipulation ${
                     activeTab === "bracket"
                       ? "bg-primary text-white shadow-md shadow-primary/20"
                       : "text-zinc-400 hover:text-white"
@@ -172,7 +184,9 @@ export default function FixturesClient() {
               {loading && (
                 <div className="flex flex-col items-center justify-center py-16 space-y-4">
                   <RefreshCw size={32} className="text-primary animate-spin" />
-                  <span className="text-xs font-bold text-zinc-400">Updating matches schedule...</span>
+                  <span className="text-xs font-bold text-zinc-400">
+                    Updating matches schedule...
+                  </span>
                 </div>
               )}
 
@@ -192,7 +206,10 @@ export default function FixturesClient() {
                       <div className="p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.015] backdrop-blur-md grid grid-cols-1 md:grid-cols-4 gap-3">
                         {/* Search bar */}
                         <div className="relative md:col-span-2">
-                          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                          <Search
+                            size={16}
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
+                          />
                           <input
                             type="text"
                             placeholder="Search by team, venue, or round..."
@@ -218,14 +235,21 @@ export default function FixturesClient() {
 
                         {/* Group Selector */}
                         <div className="relative">
-                          <Filter size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                          <Filter
+                            size={14}
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
+                          />
                           <select
                             value={selectedGroup}
                             onChange={(e) => setSelectedGroup(e.target.value)}
                             className="w-full pl-9 pr-3 py-2.5 bg-[#070414] border border-white/10 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-primary/50 text-white font-semibold cursor-pointer appearance-none"
                           >
                             {groupOptions.map((g) => (
-                              <option key={g} value={g} className="bg-[#0c0824]">
+                              <option
+                                key={g}
+                                value={g}
+                                className="bg-[#0c0824]"
+                              >
                                 {g}
                               </option>
                             ))}
@@ -234,98 +258,140 @@ export default function FixturesClient() {
 
                         {/* Status filter selector */}
                         <div className="relative">
-                          <ListFilter size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                          <ListFilter
+                            size={14}
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
+                          />
                           <select
                             value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value as "all" | "played" | "upcoming")}
+                            onChange={(e) =>
+                              setStatusFilter(
+                                e.target.value as "all" | "played" | "upcoming",
+                              )
+                            }
                             className="w-full pl-9 pr-3 py-2.5 bg-[#070414] border border-white/10 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-primary/50 text-white font-semibold cursor-pointer appearance-none"
                           >
-                            <option value="all" className="bg-[#0c0824]">Status: All Matches</option>
-                            <option value="played" className="bg-[#0c0824]">Status: Played</option>
-                            <option value="upcoming" className="bg-[#0c0824]">Status: Upcoming</option>
+                            <option value="all" className="bg-[#0c0824]">
+                              Status: All Matches
+                            </option>
+                            <option value="played" className="bg-[#0c0824]">
+                              Status: Played
+                            </option>
+                            <option value="upcoming" className="bg-[#0c0824]">
+                              Status: Upcoming
+                            </option>
                           </select>
                         </div>
                       </div>
 
                       {filteredMatches.length === 0 ? (
                         <div className="text-center py-12 p-6 rounded-2xl border border-white/5 bg-white/[0.01]">
-                          <p className="text-sm font-semibold text-zinc-400">No matches found matching your filters.</p>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            No matches found matching your filters.
+                          </p>
                         </div>
-                      ) : (() => {
-                        const dhakaToday = getDhakaTodayDateString();
-                        const tomorrowDate = new Date(dhakaToday);
-                        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-                        const dhakaTomorrow = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth() + 1).padStart(2, '0')}-${String(tomorrowDate.getDate()).padStart(2, '0')}`;
+                      ) : (
+                        (() => {
+                          const dhakaToday = getDhakaTodayDateString();
+                          const tomorrowDate = new Date(dhakaToday);
+                          tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+                          const dhakaTomorrow = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth() + 1).padStart(2, "0")}-${String(tomorrowDate.getDate()).padStart(2, "0")}`;
 
-                        const todayMatches = filteredMatches.filter((m) => m.date === dhakaToday);
-                        const tomorrowMatches = filteredMatches.filter((m) => m.date === dhakaTomorrow);
-                        const otherMatches = filteredMatches.filter((m) => m.date !== dhakaToday && m.date !== dhakaTomorrow);
+                          const todayMatches = filteredMatches.filter(
+                            (m) => m.date === dhakaToday,
+                          );
+                          const tomorrowMatches = filteredMatches.filter(
+                            (m) => m.date === dhakaTomorrow,
+                          );
+                          const otherMatches = filteredMatches.filter(
+                            (m) =>
+                              m.date !== dhakaToday && m.date !== dhakaTomorrow,
+                          );
 
-                        return (
-                          <div className="space-y-8 animate-slide-in">
-                            {/* Today's Matches Section */}
-                            {todayMatches.length > 0 && (
-                              <div className="space-y-4">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 w-fit">
-                                  <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                  </span>
-                                  <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-red-400 uppercase">
-                                    Today&apos;s Matches (BST)
-                                  </h3>
+                          return (
+                            <div className="space-y-8 animate-slide-in">
+                              {/* Today's Matches Section */}
+                              {todayMatches.length > 0 && (
+                                <div className="space-y-4">
+                                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 w-fit">
+                                    <span className="relative flex h-2 w-2">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-red-400 uppercase">
+                                      Today&apos;s Matches (BST)
+                                    </h3>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                                    {todayMatches.map((match, idx) => (
+                                      <MatchCard
+                                        key={`today-${match.num || idx}`}
+                                        match={match}
+                                        idx={idx}
+                                        isToday={true}
+                                      />
+                                    ))}
+                                  </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                                  {todayMatches.map((match, idx) => (
-                                    <MatchCard key={`today-${match.num || idx}`} match={match} idx={idx} isToday={true} />
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                              )}
 
-                            {/* Tomorrow's Matches Section */}
-                            {tomorrowMatches.length > 0 && (
+                              {/* Tomorrow's Matches Section */}
+                              {tomorrowMatches.length > 0 && (
+                                <div className="space-y-4">
+                                  {todayMatches.length > 0 && (
+                                    <div className="border-t border-white/5 pt-6"></div>
+                                  )}
+                                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 w-fit">
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-blue-400 uppercase">
+                                      Tomorrow&apos;s Matches
+                                    </h3>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                                    {tomorrowMatches.map((match, idx) => (
+                                      <MatchCard
+                                        key={`tomorrow-${match.num || idx}`}
+                                        match={match}
+                                        idx={idx}
+                                        isToday={false}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* All Other Matches Section */}
                               <div className="space-y-4">
-                                {todayMatches.length > 0 && (
-                                  <div className="border-t border-white/5 pt-6"></div>
+                                {(todayMatches.length > 0 ||
+                                  tomorrowMatches.length > 0) && (
+                                  <div className="flex items-center gap-2 border-t border-white/5 pt-6">
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-zinc-400 uppercase">
+                                      Other Fixtures & Results
+                                    </h3>
+                                  </div>
                                 )}
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 w-fit">
-                                  <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-blue-400 uppercase">
-                                    Tomorrow&apos;s Matches
-                                  </h3>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                                  {tomorrowMatches.map((match, idx) => (
-                                    <MatchCard key={`tomorrow-${match.num || idx}`} match={match} idx={idx} isToday={false} />
-                                  ))}
-                                </div>
+                                {otherMatches.length === 0 &&
+                                (todayMatches.length > 0 ||
+                                  tomorrowMatches.length > 0) ? (
+                                  <div className="text-center py-8 p-6 rounded-2xl border border-white/5 bg-white/[0.005] text-xs font-semibold text-zinc-500">
+                                    No other matches scheduled.
+                                  </div>
+                                ) : (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                                    {otherMatches.map((match, idx) => (
+                                      <MatchCard
+                                        key={`other-${match.num || idx}`}
+                                        match={match}
+                                        idx={idx}
+                                        isToday={false}
+                                      />
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-                            )}
-
-                            {/* All Other Matches Section */}
-                            <div className="space-y-4">
-                              {(todayMatches.length > 0 || tomorrowMatches.length > 0) && (
-                                <div className="flex items-center gap-2 border-t border-white/5 pt-6">
-                                  <h3 className="text-[10px] sm:text-xs font-black tracking-widest text-zinc-400 uppercase">
-                                    Other Fixtures & Results
-                                  </h3>
-                                </div>
-                              )}
-                              {otherMatches.length === 0 && (todayMatches.length > 0 || tomorrowMatches.length > 0) ? (
-                                <div className="text-center py-8 p-6 rounded-2xl border border-white/5 bg-white/[0.005] text-xs font-semibold text-zinc-500">
-                                  No other matches scheduled.
-                                </div>
-                              ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                                  {otherMatches.map((match, idx) => (
-                                    <MatchCard key={`other-${match.num || idx}`} match={match} idx={idx} isToday={false} />
-                                  ))}
-                                </div>
-                              )}
                             </div>
-                          </div>
-                        );
-                      })()}
+                          );
+                        })()
+                      )}
                     </motion.div>
                   ) : (
                     /* TOURNAMENT BRACKET / TREE VIEW */
@@ -338,13 +404,13 @@ export default function FixturesClient() {
                       className="space-y-4"
                     >
                       {/* Swipe Hint for mobile screens */}
-                      <div className="hidden md:flex items-center justify-center gap-2 py-1 px-3.5 rounded-full border border-white/10 bg-white/[0.02] text-[10px] font-bold text-primary max-w-xs mx-auto animate-pulse">
+                      <div className="flex items-center justify-center gap-2 py-1 px-3.5 rounded-full border border-white/10 bg-white/[0.02] text-[10px] font-bold text-primary max-w-xs mx-auto animate-pulse">
                         <span>Swipe horizontally to view progression</span>
                         <ChevronRight size={10} />
                       </div>
 
-                      {/* Horizontal Tree Scroll View - Desktop only */}
-                      <div className="hidden md:flex relative overflow-x-auto py-6 custom-scrollbar no-scrollbar items-start select-none max-w-full gap-2">
+                      {/* Horizontal Tree Scroll View */}
+                      <div className="flex relative overflow-x-auto py-6 custom-scrollbar no-scrollbar items-start select-none max-w-full gap-2">
                         {/* Round of 32 */}
                         <div className="flex flex-col min-w-[210px]">
                           <div className="h-8 mb-4 text-center font-black tracking-widest text-[10px] sm:text-xs text-primary uppercase border-b border-primary/20 pb-2">
@@ -352,7 +418,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {leftR32.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
@@ -375,7 +447,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {leftR16.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
@@ -396,7 +474,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {leftQF.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
@@ -415,7 +499,12 @@ export default function FixturesClient() {
                             Semi-finals (L)
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
-                            <BracketMatchCard matchNum={101} match={getKnockoutMatch(101)} allMatches={processedMatches} standings={groupStandings} />
+                            <BracketMatchCard
+                              matchNum={101}
+                              match={getKnockoutMatch(101)}
+                              allMatches={processedMatches}
+                              standings={groupStandings}
+                            />
                           </div>
                         </div>
 
@@ -431,21 +520,39 @@ export default function FixturesClient() {
                                 <Trophy size={22} className="animate-bounce" />
                               </div>
                               <div>
-                                <h4 className="text-[10px] font-black uppercase text-yellow-400 tracking-wider">FIFA Champions</h4>
-                                <p className="text-[9px] text-zinc-400 font-semibold">Who will raise the Cup?</p>
+                                <h4 className="text-[10px] font-black uppercase text-yellow-400 tracking-wider">
+                                  FIFA Champions
+                                </h4>
+                                <p className="text-[9px] text-zinc-400 font-semibold">
+                                  Who will raise the Cup?
+                                </p>
                               </div>
                             </div>
 
                             {/* Final Match */}
                             <div className="w-full">
-                              <div className="text-[8px] font-bold text-yellow-500 uppercase tracking-widest text-center mb-1.5">Grand Final</div>
-                              <BracketMatchCard matchNum={104} match={getKnockoutMatch(104)} allMatches={processedMatches} standings={groupStandings} />
+                              <div className="text-[8px] font-bold text-yellow-500 uppercase tracking-widest text-center mb-1.5">
+                                Grand Final
+                              </div>
+                              <BracketMatchCard
+                                matchNum={104}
+                                match={getKnockoutMatch(104)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             </div>
 
                             {/* Third Place Match */}
                             <div className="w-full">
-                              <div className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest text-center mb-1.5">Third Place Playoff</div>
-                              <BracketMatchCard matchNum={103} match={getKnockoutMatch(103)} allMatches={processedMatches} standings={groupStandings} />
+                              <div className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest text-center mb-1.5">
+                                Third Place Playoff
+                              </div>
+                              <BracketMatchCard
+                                matchNum={103}
+                                match={getKnockoutMatch(103)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             </div>
                           </div>
                         </div>
@@ -456,7 +563,12 @@ export default function FixturesClient() {
                             Semi-finals (R)
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
-                            <BracketMatchCard matchNum={102} match={getKnockoutMatch(102)} allMatches={processedMatches} standings={groupStandings} />
+                            <BracketMatchCard
+                              matchNum={102}
+                              match={getKnockoutMatch(102)}
+                              allMatches={processedMatches}
+                              standings={groupStandings}
+                            />
                           </div>
                         </div>
 
@@ -475,7 +587,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {rightQF.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
@@ -496,7 +614,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {rightR16.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
@@ -519,7 +643,13 @@ export default function FixturesClient() {
                           </div>
                           <div className="flex flex-col justify-around h-[1200px]">
                             {rightR32.map((num) => (
-                              <BracketMatchCard key={num} matchNum={num} match={getKnockoutMatch(num)} allMatches={processedMatches} standings={groupStandings} />
+                              <BracketMatchCard
+                                key={num}
+                                matchNum={num}
+                                match={getKnockoutMatch(num)}
+                                allMatches={processedMatches}
+                                standings={groupStandings}
+                              />
                             ))}
                           </div>
                         </div>
