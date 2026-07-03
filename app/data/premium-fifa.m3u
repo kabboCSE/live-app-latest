@@ -10,6 +10,9 @@
 #EXTINF:-1 tvg-logo="https://ssl.com.bd/sites/default/files/BTV%20Logo%20Gallery.png" group-title="FIFA Premium",BTV
 http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8
 
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/sm-monirulislam/SM-Live-TV/main/Script/world_cup.png" group-title="FIFA Premium",BTV2
+http://114.130.57.233:8080/BTV/video.m3u8?token=SkQuhAXZxgBan1
+
 #EXTINF:-1 tvg-logo="http://dds.oncast.me/img/logo/sp3.png" group-title="FIFA Premium",Live Sports-3
 https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8
 

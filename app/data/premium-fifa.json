@@ -7,6 +7,13 @@
     "type": "hls"
   },
   {
+    "name": "BTV2",
+    "logo": "https://raw.githubusercontent.com/sm-monirulislam/SM-Live-TV/main/Script/world_cup.png",
+    "group": "FIFA Premium",
+    "url": "http://114.130.57.233:8080/BTV/video.m3u8?token=SkQuhAXZxgBan1",
+    "type": "hls"
+  },
+  {
     "name": "Live Sports-3",
     "logo": "http://dds.oncast.me/img/logo/sp3.png",
     "group": "FIFA Premium",
