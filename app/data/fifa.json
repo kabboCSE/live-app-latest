@@ -1,33 +1,170 @@
 [
   {
-    "name": "D Sports",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/5a/DSports.png",
+    "name": "TVRI sport",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
     "group": "FIFA",
-    "url": "https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8",
-    "type": "hls",
-    "kid": "a7d11d37a1f7611ee88d4db880171f32",
-    "key": "68f96d618b0b956b008c445896a25a79"
+    "url": "http://103.148.44.38:8000/play/a05u/index.m3u8",
+    "type": "hls"
   },
   {
-    "name": "FIFA +",
-    "logo": "https://cdn.broadbandtvnews.com/wp-content/uploads/2025/05/13115423/Fox-One-Logo.jpg",
-    "group": "Sports",
-    "url": "https://c822c659.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xpc2hfSExT/a4288c44-0852-418a-874a-6068c1f660a7/2.m3u8",
-    "type": "hls",
-    "kid": "f6564ec2aee819046328a0e153be574d",
-    "key": "ff46a8a1031eb27ef22576a077c98ab7"
+    "name": "Btv",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "TNS 1",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://s.rocketdns.info:8080/live/monstercable/Dq6jjknxCr/3146.ts",
+    "type": "hls"
+  },
+  {
+    "name": "TNS 2",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://s.rocketdns.info:8080/live/monstercable/Dq6jjknxCr/3145.ts",
+    "type": "hls"
+  },
+  {
+    "name": "Somoy",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "Unite 8 Sports 1 HD",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://starhub.pro/live/farhat-3379/67897-913379/741567.ts",
+    "type": "hls"
+  },
+  {
+    "name": "Unite 8 Sports 2 HD",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://212.102.34.8:9080/AndFlixHD/video.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "TVP Sports",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "Bein Sports 1 720p",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "beIN SPORTS 1 UHD",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://proxpanel.cc/h1wqD6CY/byxHYgX/707929",
+    "type": "hls"
+  },
+  {
+    "name": "M6",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://tv.beyondtaxconsultants.com/api/robi/lps/http://151.80.18.177:86/M6_HD/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "WIN Sports",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "FOX",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://84.17.50.102/fox/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "FS1",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://fastshare1.com:8080/live/931461266/374152877/751354.ts?RKDYIPTV&token=rkdyiptv",
+    "type": "hls"
+  },
+  {
+    "name": "S Football",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://rgkkw.live/live/1Aoen7elp5/IgMJ60tmAa/745149.ts",
+    "type": "hls"
+  },
+  {
+    "name": "T Sports HD",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://trs1.aynaott.com/tsports/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "PTV 4K",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://starhub.pro/live/farhat-3379/67897-913379/89.ts",
+    "type": "hls"
+  },
+  {
+    "name": "DAZN 1",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "Telemundo",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "ESPN S1",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/97/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "ESPN S2",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "http://186.33.40.97:8789/play/20",
+    "type": "hls"
+  },
+  {
+    "name": "D Sports",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/106/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "Tudn Sports",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/52/index.m3u8",
+    "type": "hls"
   },
   {
     "name": "CAZE TV",
     "logo": "https://images.seeklogo.com/logo-png/61/1/cazetv-logo-png_seeklogo-619708.png",
     "group": "FIFA",
     "url": "https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8"
-  },
-  {
-    "name": "Win Sports",
-    "logo": "https://images.seeklogo.com/logo-png/25/1/win-sports-logo-png_seeklogo-259337.png",
-    "group": "FIFA",
-    "url": "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8"
   },
   {
     "name": "SPORTS FIRST TV",
@@ -51,15 +188,6 @@
     "type": "dash",
     "kid": "1710ac2bbfcd3032d0f6533850968f47",
     "key": "d2548dacc8efcd1cd0af0373060c82dc"
-  },
-  {
-    "name": "Telemundo",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Telemundo_logo_2018.svg/960px-Telemundo_logo_2018.svg.png",
-    "group": "FIFA",
-    "url": "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd",
-    "type": "dash",
-    "kid": "ce7ab3022e753307997f58afe001bac4",
-    "key": "72d631a66e635c60829a0fe7705516c1"
   },
   {
     "name": "FUSSBALL TV",
@@ -87,5 +215,14 @@
     "type": "dash",
     "kid": "433ffba670963e70857859a9dff4be04",
     "key": "51ede3a821229fe81e71282c8eff80e3"
+  },
+  {
+    "name": "FIFA +",
+    "logo": "https://cdn.broadbandtvnews.com/wp-content/uploads/2025/05/13115423/Fox-One-Logo.jpg",
+    "group": "Sports",
+    "url": "https://c822c659.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1pbl9GSUZBUGx1c0VuZ2xpc2hfSExT/a4288c44-0852-418a-874a-6068c1f660a7/2.m3u8",
+    "type": "hls",
+    "kid": "f6564ec2aee819046328a0e153be574d",
+    "key": "ff46a8a1031eb27ef22576a077c98ab7"
   }
 ]

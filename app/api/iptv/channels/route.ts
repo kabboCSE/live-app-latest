@@ -22,12 +22,14 @@ const cache: Record<string, PlaylistCache> = {
   universal: { channels: [], hash: "", lastLoadedTime: 0 },
   bangla: { channels: [], hash: "", lastLoadedTime: 0 },
   fifa: { channels: [], hash: "", lastLoadedTime: 0 },
+  "premium-fifa": { channels: [], hash: "", lastLoadedTime: 0 },
 };
 
 function getFilename(type: string): string {
   if (type === "sports") return "sports.json";
   if (type === "bangla") return "bangla.json";
   if (type === "fifa") return "fifa.json";
+  if (type === "premium-fifa") return "premium-fifa.json";
   return "channels.json";
 }
 
@@ -36,22 +38,30 @@ export function getChannelsWithHash(rawType: string = "universal") {
   if (type === "default" || type === "channels") {
     type = "universal";
   }
-  if (type !== "sports" && type !== "bangla" && type !== "fifa") {
+  if (
+    type !== "sports" &&
+    type !== "bangla" &&
+    type !== "fifa" &&
+    type !== "premium-fifa"
+  ) {
     type = "universal";
   }
 
   const now = Date.now();
-  const playlistCache = cache[type] || { channels: [], hash: "", lastLoadedTime: 0 };
+  const playlistCache = cache[type] || {
+    channels: [],
+    hash: "",
+    lastLoadedTime: 0,
+  };
 
   // Refresh cache every 60 seconds
-  if (now - playlistCache.lastLoadedTime > 60_000 || playlistCache.channels.length === 0) {
+  if (
+    now - playlistCache.lastLoadedTime > 60_000 ||
+    playlistCache.channels.length === 0
+  ) {
     try {
       const filename = getFilename(type);
-      const channelsPath = path.join(
-        process.cwd(),
-        "app/data",
-        filename
-      );
+      const channelsPath = path.join(process.cwd(), "app/data", filename);
 
       if (fs.existsSync(channelsPath)) {
         const fileContent = fs.readFileSync(channelsPath, "utf8");
@@ -67,8 +77,16 @@ export function getChannelsWithHash(rawType: string = "universal") {
         // Add IDs if not present and deduplicate
         const channels = raw.map(
           (
-            ch: { name: string; logo: string; group: string; url: string; type?: string; kid?: string; key?: string },
-            idx: number
+            ch: {
+              name: string;
+              logo: string;
+              group: string;
+              url: string;
+              type?: string;
+              kid?: string;
+              key?: string;
+            },
+            idx: number,
           ) => ({
             id: `ch-${type}-${idx}`,
             name: ch.name,
@@ -78,9 +96,9 @@ export function getChannelsWithHash(rawType: string = "universal") {
             ...(ch.type && { type: ch.type }),
             ...(ch.kid && { kid: ch.kid }),
             ...(ch.key && { key: ch.key }),
-          })
+          }),
         );
-        
+
         cache[type] = {
           channels,
           hash,
@@ -88,7 +106,10 @@ export function getChannelsWithHash(rawType: string = "universal") {
         };
       }
     } catch (error) {
-      console.error(`Error reading IPTV channels file for type ${type}:`, error);
+      console.error(
+        `Error reading IPTV channels file for type ${type}:`,
+        error,
+      );
     }
   }
 

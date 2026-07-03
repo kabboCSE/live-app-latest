@@ -14,7 +14,7 @@ import {
   ExternalLink,
   ShieldCheck,
   Globe,
-  Bug
+  Bug,
 } from "lucide-react";
 import {
   FaGithub,
@@ -25,7 +25,13 @@ import {
   FaReact,
   FaPython,
 } from "react-icons/fa6";
-import { SiMongodb, SiExpress, SiTypescript, SiShopify, SiPostman } from "react-icons/si";
+import {
+  SiMongodb,
+  SiExpress,
+  SiTypescript,
+  SiShopify,
+  SiPostman,
+} from "react-icons/si";
 import Link from "next/link";
 import BackgroundScene from "./BackgroundScene";
 import Header from "./Header";
@@ -142,9 +148,13 @@ export default function AboutView() {
                 </div>
 
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl">
-                  I am currently working as an <strong className="text-white">SQA engineer at Akij iBOS</strong>,
-                  where I ensure software quality through testing, validation, and bug identification.
-                  I collaborate closely with development teams to deliver high-quality software products.
+                  I am currently working as an{" "}
+                  <strong className="text-white">
+                    SQA engineer at Akij iBOS
+                  </strong>
+                  , where I ensure software quality through testing, validation,
+                  and bug identification. I collaborate closely with development
+                  teams to deliver high-quality software products.
                 </p>
 
                 {/* Quick Connect Buttons */}
@@ -208,16 +218,29 @@ export default function AboutView() {
 
               <div className="space-y-4 text-sm sm:text-base text-zinc-300 leading-relaxed">
                 <p>
-                  I completed my <strong className="text-white">MSc in Computer Science & Engineering</strong> from{" "}
-                  <strong className="text-white">Jahangirnagar University</strong> in 2024 and my{" "}
+                  I completed my{" "}
+                  <strong className="text-white">
+                    MSc in Computer Science & Engineering
+                  </strong>{" "}
+                  from{" "}
+                  <strong className="text-white">
+                    Jahangirnagar University
+                  </strong>{" "}
+                  in 2024 and my{" "}
                   <strong className="text-white">BSc in CSE</strong> from{" "}
-                  <strong className="text-white">Daffodil International University</strong> in 2022.
+                  <strong className="text-white">
+                    Daffodil International University
+                  </strong>{" "}
+                  in 2022.
                 </p>
                 <p>
-                  I specialize in the <strong className="text-white">MERN stack</strong> (MongoDB, Express.js, React, Node.js)
-                  and have experience in software quality assurance, API testing with Postman,
-                  bug tracking, and Shopify development. I am passionate about building reliable,
-                  high-performance applications and ensuring top-notch software quality.
+                  I specialize in the{" "}
+                  <strong className="text-white">MERN stack</strong> (MongoDB,
+                  Express.js, React, Node.js) and have experience in software
+                  quality assurance, API testing with Postman, bug tracking, and
+                  Shopify development. I am passionate about building reliable,
+                  high-performance applications and ensuring top-notch software
+                  quality.
                 </p>
                 <div className="flex flex-wrap gap-3 pt-2">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
@@ -324,8 +347,12 @@ export default function AboutView() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold text-white">{item.title}</h3>
-                    <p className="text-sm text-zinc-400 font-medium">{item.institution}</p>
+                    <h3 className="text-base sm:text-lg font-bold text-white">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-zinc-400 font-medium">
+                      {item.institution}
+                    </p>
                     {item.description && (
                       <p className="text-xs sm:text-sm text-zinc-500 mt-1.5 leading-relaxed max-w-xl">
                         {item.description}
@@ -357,14 +384,14 @@ export default function AboutView() {
                   Support This Project
                 </h3>
                 <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-sm">
-                  This IPTV player is open-source and free forever. If you find it useful,
-                  please give it a star on GitHub to help others discover it!
+                  This IPTV player is open-source and free forever. If you find
+                  it useful, please give it a star on GitHub to help others
+                  discover it!
                 </p>
               </div>
 
               <a
-                href="https://github.com/kabboCSE/iptv"
-                target="_blank"
+                href="#"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-violet-600 hover:opacity-95 text-white font-extrabold text-sm transition-all duration-300 shadow-lg shadow-primary/20 active:scale-95 cursor-pointer"
               >
@@ -392,8 +419,8 @@ export default function AboutView() {
                   Get In Touch
                 </h3>
                 <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-sm">
-                  Have a question, suggestion, or want to collaborate? Feel free to reach out
-                  via email or connect on social media.
+                  Have a question, suggestion, or want to collaborate? Feel free
+                  to reach out via email or connect on social media.
                 </p>
               </div>
 

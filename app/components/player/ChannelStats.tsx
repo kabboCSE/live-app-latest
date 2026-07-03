@@ -75,7 +75,9 @@ export function ChannelStats({
             <Radio size={20} className="text-emerald-400" />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-bold text-gray-400">Select a Channel</h2>
+            <h2 className="text-sm sm:text-base font-bold text-gray-400">
+              Select a Channel
+            </h2>
             <p className="text-[9px] uppercase font-bold tracking-widest text-zinc-500 mt-0.5">
               Choose from the list below
             </p>
@@ -105,7 +107,9 @@ export function ChannelStats({
       {/* Developer Info Card */}
       <div className="glass-card-hover p-3 sm:p-5 rounded-2xl flex items-center gap-3 sm:gap-4">
         <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-amber-500/20 shadow-md flex-shrink-0 bg-amber-500/10 flex items-center justify-center">
-          <span className="text-lg sm:text-xl font-black gradient-text-accent">SK</span>
+          <span className="text-lg sm:text-xl font-black gradient-text-accent">
+            SK
+          </span>
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm sm:text-base font-bold text-white truncate">
@@ -114,7 +118,7 @@ export function ChannelStats({
           <p className="text-[9px] sm:text-[10px] text-zinc-500 mt-0.5">
             For support, contact via{" "}
             <a
-              href="https://t.me/SHAJON"
+              href="https://t.me/Kabbo512"
               target="_blank"
               rel="noopener noreferrer"
               className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors"

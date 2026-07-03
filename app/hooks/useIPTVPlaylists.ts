@@ -28,10 +28,14 @@ export const getIsIOS = (): boolean => {
   if (/iPad|iPhone|iPod/.test(ua)) return true;
   // iPadOS reports as Mac but has touch — use modern userAgentData API with legacy fallback
   const platform =
-    (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
+    (navigator as Navigator & { userAgentData?: { platform?: string } })
+      .userAgentData?.platform ??
     navigator.platform ??
     "";
-  return (platform === "macOS" || platform === "MacIntel") && navigator.maxTouchPoints > 1;
+  return (
+    (platform === "macOS" || platform === "MacIntel") &&
+    navigator.maxTouchPoints > 1
+  );
 };
 
 const CACHE_MAX_AGE_MS = 15 * 60 * 1000;
@@ -48,12 +52,14 @@ export function useIPTVPlaylists() {
 
   // Playlist Management States
   const [playlists, setPlaylists] = useState<Playlist[]>([
+    { id: "premium-fifa", name: "FIFA Premium", type: "default", channels: [] },
     { id: "fifa", name: "FIFA", type: "default", channels: [] },
     { id: "bangla", name: "Bangla", type: "default", channels: [] },
     { id: "sports", name: "Sports", type: "default", channels: [] },
     { id: "universal", name: "Universal", type: "default", channels: [] },
   ]);
-  const [activePlaylistId, setActivePlaylistId] = useState<string>("fifa");
+  const [activePlaylistId, setActivePlaylistId] =
+    useState<string>("premium-fifa");
 
   // Custom playlist loading states
   const [playlistTab, setPlaylistTab] = useState<"browse" | "manage">("browse");
@@ -80,81 +86,104 @@ export function useIPTVPlaylists() {
     });
   }, []);
 
-  const getCachedChannels = useCallback(async (playlistId: string): Promise<{ channels: Channel[]; hash: string } | null> => {
-    try {
-      const db = await openCacheDB();
-      return new Promise((resolve) => {
-        const tx = db.transaction("channels", "readonly");
+  const getCachedChannels = useCallback(
+    async (
+      playlistId: string,
+    ): Promise<{ channels: Channel[]; hash: string } | null> => {
+      try {
+        const db = await openCacheDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction("channels", "readonly");
+          const store = tx.objectStore("channels");
+          const req = store.get(`cached-data-${playlistId}`);
+          req.onsuccess = () => {
+            const result = req.result;
+            if (!result) return resolve(null);
+            // Expire cache after CACHE_MAX_AGE_MS
+            const cachedAt = result.cachedAt || 0;
+            if (Date.now() - cachedAt > CACHE_MAX_AGE_MS) {
+              // Cache expired — delete and return null
+              try {
+                const delTx = db.transaction("channels", "readwrite");
+                delTx
+                  .objectStore("channels")
+                  .delete(`cached-data-${playlistId}`);
+              } catch {
+                /* ignore cleanup errors */
+              }
+              return resolve(null);
+            }
+            resolve({ channels: result.channels, hash: result.hash });
+          };
+          req.onerror = () => resolve(null);
+        });
+      } catch {
+        return null;
+      }
+    },
+    [openCacheDB],
+  );
+
+  const clearCachedChannels = useCallback(
+    async (playlistId: string) => {
+      try {
+        const db = await openCacheDB();
+        const tx = db.transaction("channels", "readwrite");
+        tx.objectStore("channels").delete(`cached-data-${playlistId}`);
+      } catch {
+        /* ignore */
+      }
+    },
+    [openCacheDB],
+  );
+
+  const setCachedChannels = useCallback(
+    async (playlistId: string, channelsList: Channel[], hash: string) => {
+      try {
+        const db = await openCacheDB();
+        const tx = db.transaction("channels", "readwrite");
         const store = tx.objectStore("channels");
-        const req = store.get(`cached-data-${playlistId}`);
-        req.onsuccess = () => {
-          const result = req.result;
-          if (!result) return resolve(null);
-          // Expire cache after CACHE_MAX_AGE_MS
-          const cachedAt = result.cachedAt || 0;
-          if (Date.now() - cachedAt > CACHE_MAX_AGE_MS) {
-            // Cache expired — delete and return null
-            try {
-              const delTx = db.transaction("channels", "readwrite");
-              delTx.objectStore("channels").delete(`cached-data-${playlistId}`);
-            } catch { /* ignore cleanup errors */ }
-            return resolve(null);
-          }
-          resolve({ channels: result.channels, hash: result.hash });
-        };
-        req.onerror = () => resolve(null);
-      });
-    } catch {
-      return null;
-    }
-  }, [openCacheDB]);
-
-  const clearCachedChannels = useCallback(async (playlistId: string) => {
-    try {
-      const db = await openCacheDB();
-      const tx = db.transaction("channels", "readwrite");
-      tx.objectStore("channels").delete(`cached-data-${playlistId}`);
-    } catch { /* ignore */ }
-  }, [openCacheDB]);
-
-  const setCachedChannels = useCallback(async (playlistId: string, channelsList: Channel[], hash: string) => {
-    try {
-      const db = await openCacheDB();
-      const tx = db.transaction("channels", "readwrite");
-      const store = tx.objectStore("channels");
-      store.put({ channels: channelsList, hash, cachedAt: Date.now() }, `cached-data-${playlistId}`);
-    } catch (e) {
-      console.warn("Failed to cache channels in IndexedDB:", e);
-    }
-  }, [openCacheDB]);
+        store.put(
+          { channels: channelsList, hash, cachedAt: Date.now() },
+          `cached-data-${playlistId}`,
+        );
+      } catch (e) {
+        console.warn("Failed to cache channels in IndexedDB:", e);
+      }
+    },
+    [openCacheDB],
+  );
 
   // Helper: fetch fresh channels from server and update state + cache
-  const fetchAndUpdatePlaylist = useCallback(async (playlistId: string) => {
-    const response = await fetch(`/api/iptv/channels?type=${playlistId}`, {
-      cache: "no-store",
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to load channels for ${playlistId} (Status ${response.status})`);
-    }
-    const data = await response.json();
-    const serverHash = response.headers.get("X-Channels-Hash") || "";
+  const fetchAndUpdatePlaylist = useCallback(
+    async (playlistId: string) => {
+      const response = await fetch(`/api/iptv/channels?type=${playlistId}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load channels for ${playlistId} (Status ${response.status})`,
+        );
+      }
+      const data = await response.json();
+      const serverHash = response.headers.get("X-Channels-Hash") || "";
 
-    setPlaylists((prev) =>
-      prev.map((p) =>
-        p.id === playlistId ? { ...p, channels: data } : p
-      )
-    );
+      setPlaylists((prev) =>
+        prev.map((p) => (p.id === playlistId ? { ...p, channels: data } : p)),
+      );
 
-    // Store in IndexedDB for next load
-    if (serverHash) {
-      await setCachedChannels(playlistId, data, serverHash);
-    }
-  }, [setCachedChannels]);
+      // Store in IndexedDB for next load
+      if (serverHash) {
+        await setCachedChannels(playlistId, data, serverHash);
+      }
+    },
+    [setCachedChannels],
+  );
 
   // 1. Fetch channel metadata with IndexedDB cache + SHA-256 hash validation for all default playlists
   useEffect(() => {
     const defaultPlaylistsToLoad = playlists.filter(
-      (p) => p.type === "default" && p.channels.length === 0
+      (p) => p.type === "default" && p.channels.length === 0,
     );
 
     if (defaultPlaylistsToLoad.length === 0) {
@@ -164,7 +193,11 @@ export function useIPTVPlaylists() {
 
     // Show loading spinner only if the active playlist is empty and needs to load
     const activePlaylist = playlists.find((p) => p.id === activePlaylistId);
-    if (activePlaylist && activePlaylist.type === "default" && activePlaylist.channels.length === 0) {
+    if (
+      activePlaylist &&
+      activePlaylist.type === "default" &&
+      activePlaylist.channels.length === 0
+    ) {
       setTimeout(() => setLoading(true), 0);
     }
 
@@ -179,8 +212,8 @@ export function useIPTVPlaylists() {
             if (cached && cached.channels.length > 0) {
               setPlaylists((prev) =>
                 prev.map((p) =>
-                  p.id === playlistId ? { ...p, channels: cached.channels } : p
-                )
+                  p.id === playlistId ? { ...p, channels: cached.channels } : p,
+                ),
               );
 
               // If this is the active playlist, we can hide the loading spinner now
@@ -190,9 +223,12 @@ export function useIPTVPlaylists() {
 
               // Step 2: Fetch only the hash to verify freshness
               try {
-                const hashResponse = await fetch(`/api/iptv/channels/hash?type=${playlistId}`, {
-                  cache: "no-store",
-                });
+                const hashResponse = await fetch(
+                  `/api/iptv/channels/hash?type=${playlistId}`,
+                  {
+                    cache: "no-store",
+                  },
+                );
                 if (hashResponse.ok) {
                   const { hash: serverHash } = await hashResponse.json();
                   if (serverHash === cached.hash) {
@@ -208,12 +244,14 @@ export function useIPTVPlaylists() {
 
             // Step 3: Fetch full data
             await fetchAndUpdatePlaylist(playlistId);
-          })
+          }),
         );
       } catch (err: unknown) {
         console.error("Error loading default playlists:", err);
         // Only set error state if it affects the active playlist
-        const activePlaylistAfter = playlists.find((p) => p.id === activePlaylistId);
+        const activePlaylistAfter = playlists.find(
+          (p) => p.id === activePlaylistId,
+        );
         if (
           activePlaylistAfter &&
           activePlaylistAfter.type === "default" &&
@@ -231,23 +269,35 @@ export function useIPTVPlaylists() {
     }
 
     loadAll();
-  }, [activePlaylistId, playlists, getCachedChannels, setCachedChannels, clearCachedChannels, fetchAndUpdatePlaylist]);
+  }, [
+    activePlaylistId,
+    playlists,
+    getCachedChannels,
+    setCachedChannels,
+    clearCachedChannels,
+    fetchAndUpdatePlaylist,
+  ]);
 
   // Periodic background hash check — every 15 minutes, verify all default playlists and refresh if stale
   useEffect(() => {
     const REFRESH_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
 
     const checkAndRefresh = async () => {
-      const defaultPlaylists = playlists.filter((p) => p.type === "default" && p.channels.length > 0);
+      const defaultPlaylists = playlists.filter(
+        (p) => p.type === "default" && p.channels.length > 0,
+      );
       for (const pl of defaultPlaylists) {
         try {
           // Clear expired cache entries
           await clearCachedChannels(pl.id);
 
           // Check server hash
-          const hashResponse = await fetch(`/api/iptv/channels/hash?type=${pl.id}`, {
-            cache: "no-store",
-          });
+          const hashResponse = await fetch(
+            `/api/iptv/channels/hash?type=${pl.id}`,
+            {
+              cache: "no-store",
+            },
+          );
           if (!hashResponse.ok) continue;
           const { hash: serverHash } = await hashResponse.json();
 
@@ -265,24 +315,36 @@ export function useIPTVPlaylists() {
 
     const intervalId = setInterval(checkAndRefresh, REFRESH_INTERVAL_MS);
     return () => clearInterval(intervalId);
-  }, [playlists, getCachedChannels, clearCachedChannels, fetchAndUpdatePlaylist]);
+  }, [
+    playlists,
+    getCachedChannels,
+    clearCachedChannels,
+    fetchAndUpdatePlaylist,
+  ]);
 
   // Sync active playlist channels to standard list representation
   useEffect(() => {
-    const currentPlaylist = playlists.find(p => p.id === activePlaylistId);
+    const currentPlaylist = playlists.find((p) => p.id === activePlaylistId);
     if (currentPlaylist) {
       const selectedChannelId = selectedChannel?.id;
       const selectedChannelUrl = selectedChannel?.url;
 
       setTimeout(() => {
         const filtered = getIsIOS()
-          ? currentPlaylist.channels.filter(c => !(c.type === "dash" || c.url.includes(".mpd") || c.url.endsWith(".mpd")))
+          ? currentPlaylist.channels.filter(
+              (c) =>
+                !(
+                  c.type === "dash" ||
+                  c.url.includes(".mpd") ||
+                  c.url.endsWith(".mpd")
+                ),
+            )
           : currentPlaylist.channels;
 
         setChannels(filtered);
         if (filtered.length > 0) {
           const alreadySelected = filtered.find(
-            c => c.id === selectedChannelId || c.url === selectedChannelUrl
+            (c) => c.id === selectedChannelId || c.url === selectedChannelUrl,
           );
           if (!alreadySelected) {
             const randomIndex = Math.floor(Math.random() * filtered.length);
@@ -295,7 +357,13 @@ export function useIPTVPlaylists() {
         }
       }, 0);
     }
-  }, [activePlaylistId, playlists, selectedChannel?.id, selectedChannel?.url, loading]);
+  }, [
+    activePlaylistId,
+    playlists,
+    selectedChannel?.id,
+    selectedChannel?.url,
+    loading,
+  ]);
 
   // Hydrate playlists from localStorage on client-side mount
   useEffect(() => {
@@ -305,24 +373,28 @@ export function useIPTVPlaylists() {
 
       if (saved) {
         const parsedSaved = JSON.parse(saved) as Playlist[];
-        const customPlaylists = parsedSaved.filter(p =>
-          p.id !== "default" && p.id !== "sports" && p.id !== "universal" && p.id !== "bangla" && p.id !== "fifa"
+        const customPlaylists = parsedSaved.filter(
+          (p) =>
+            p.id !== "default" &&
+            p.id !== "sports" &&
+            p.id !== "universal" &&
+            p.id !== "bangla" &&
+            p.id !== "fifa" &&
+            p.id !== "premium-fifa",
         );
 
         setTimeout(() => {
-          setPlaylists(prev => {
-            const defaults = prev.filter(p => p.type === "default");
-            return [
-              ...defaults,
-              ...customPlaylists
-            ];
+          setPlaylists((prev) => {
+            const defaults = prev.filter((p) => p.type === "default");
+            return [...defaults, ...customPlaylists];
           });
         }, 0);
       }
 
       if (savedActiveId) {
         setTimeout(() => {
-          const resolvedActiveId = savedActiveId === "default" ? "fifa" : savedActiveId;
+          const resolvedActiveId =
+            savedActiveId === "default" ? "premium-fifa" : savedActiveId;
           setActivePlaylistId(resolvedActiveId);
         }, 0);
       }
@@ -333,11 +405,20 @@ export function useIPTVPlaylists() {
 
   // Save custom playlists to localStorage whenever they change
   useEffect(() => {
-    const customPlaylists = playlists.filter(p =>
-      p.id !== "default" && p.id !== "sports" && p.id !== "universal" && p.id !== "bangla" && p.id !== "fifa"
+    const customPlaylists = playlists.filter(
+      (p) =>
+        p.id !== "default" &&
+        p.id !== "sports" &&
+        p.id !== "universal" &&
+        p.id !== "bangla" &&
+        p.id !== "fifa" &&
+        p.id !== "premium-fifa",
     );
     try {
-      localStorage.setItem("iptv_saved_playlists", JSON.stringify(customPlaylists));
+      localStorage.setItem(
+        "iptv_saved_playlists",
+        JSON.stringify(customPlaylists),
+      );
     } catch (e) {
       console.error("Failed to save playlists to localStorage:", e);
     }
@@ -366,7 +447,9 @@ export function useIPTVPlaylists() {
         const logoMatch = line.match(/(?:tvg-logo|logo)="([^"]+)"/i);
         if (logoMatch) currentChannel.logo = logoMatch[1];
 
-        const groupMatch = line.match(/(?:group-title|tvg-group|group)="([^"]+)"/i);
+        const groupMatch = line.match(
+          /(?:group-title|tvg-group|group)="([^"]+)"/i,
+        );
         if (groupMatch) currentChannel.group = groupMatch[1];
 
         const commaIndex = line.lastIndexOf(",");
@@ -378,11 +461,18 @@ export function useIPTVPlaylists() {
         line.startsWith("https://") ||
         (line && !line.startsWith("#"))
       ) {
-        if (currentChannel.name || line.includes("index.m3u8") || line.includes(".m3u8") || line.includes(".mp4")) {
+        if (
+          currentChannel.name ||
+          line.includes("index.m3u8") ||
+          line.includes(".m3u8") ||
+          line.includes(".mp4")
+        ) {
           currentChannel.url = line;
           if (!currentChannel.name) {
             const parts = line.split("/");
-            currentChannel.name = parts[parts.length - 1] || "Channel " + (parsedChannels.length + 1);
+            currentChannel.name =
+              parts[parts.length - 1] ||
+              "Channel " + (parsedChannels.length + 1);
           }
           currentChannel.id = `custom-ch-${parsedChannels.length}-${Date.now()}`;
           if (!currentChannel.group) currentChannel.group = "Custom";
@@ -418,11 +508,16 @@ export function useIPTVPlaylists() {
     const data = JSON.parse(text);
     const list = Array.isArray(data) ? data : data.channels || data.items || [];
     if (!Array.isArray(list)) {
-      throw new Error("Invalid playlist JSON format. Expected an array of channels.");
+      throw new Error(
+        "Invalid playlist JSON format. Expected an array of channels.",
+      );
     }
     return list.map((ch: RawChannelInput, idx: number) => {
       const url = ch.url || ch.streamUrl || ch.link;
-      if (!url) throw new Error(`Channel at index ${idx} is missing a streaming URL ('url')`);
+      if (!url)
+        throw new Error(
+          `Channel at index ${idx} is missing a streaming URL ('url')`,
+        );
       return {
         id: ch.id || `custom-json-${idx}-${Date.now()}`,
         name: ch.name || ch.title || `Channel ${idx + 1}`,
@@ -455,7 +550,8 @@ export function useIPTVPlaylists() {
           throw new Error("No channels could be parsed from this file.");
         }
 
-        const name = uploadPlaylistName.trim() || file.name.replace(/\.[^/.]+$/, "");
+        const name =
+          uploadPlaylistName.trim() || file.name.replace(/\.[^/.]+$/, "");
         const newPlaylist: Playlist = {
           id: `playlist-${Date.now()}`,
           name: name,
@@ -463,7 +559,7 @@ export function useIPTVPlaylists() {
           channels: parsed,
         };
 
-        setPlaylists(prev => [...prev, newPlaylist]);
+        setPlaylists((prev) => [...prev, newPlaylist]);
         setActivePlaylistId(newPlaylist.id);
         setPlaylistTab("browse");
         setUploadPlaylistName("");
@@ -472,7 +568,7 @@ export function useIPTVPlaylists() {
         setImportError(
           err instanceof Error
             ? err.message
-            : "Failed to parse file. Ensure it is a valid M3U or JSON playlist."
+            : "Failed to parse file. Ensure it is a valid M3U or JSON playlist.",
         );
       }
     };
@@ -541,7 +637,9 @@ export function useIPTVPlaylists() {
       if (!name) {
         try {
           const urlObj = new URL(importUrl);
-          name = urlObj.hostname + urlObj.pathname.substring(urlObj.pathname.lastIndexOf("/"));
+          name =
+            urlObj.hostname +
+            urlObj.pathname.substring(urlObj.pathname.lastIndexOf("/"));
           name = name.replace(/\.[^/.]+$/, "");
         } catch {
           name = "Imported URL Playlist";
@@ -556,7 +654,7 @@ export function useIPTVPlaylists() {
         channels: parsed,
       };
 
-      setPlaylists(prev => [...prev, newPlaylist]);
+      setPlaylists((prev) => [...prev, newPlaylist]);
       setActivePlaylistId(newPlaylist.id);
       setImportUrl("");
       setPlaylistName("");
@@ -565,7 +663,7 @@ export function useIPTVPlaylists() {
       setImportError(
         err instanceof Error
           ? err.message
-          : "Failed to import from URL. Please check the link or CORS policy."
+          : "Failed to import from URL. Please check the link or CORS policy.",
       );
     } finally {
       setIsImporting(false);
@@ -574,12 +672,20 @@ export function useIPTVPlaylists() {
 
   const handleDeletePlaylist = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (id === "default" || id === "sports" || id === "universal" || id === "bangla" || id === "fifa") return;
+    if (
+      id === "default" ||
+      id === "sports" ||
+      id === "universal" ||
+      id === "bangla" ||
+      id === "fifa" ||
+      id === "premium-fifa"
+    )
+      return;
 
-    setPlaylists(prev => {
-      const updated = prev.filter(p => p.id !== id);
+    setPlaylists((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
       if (activePlaylistId === id) {
-        setActivePlaylistId("fifa");
+        setActivePlaylistId("premium-fifa");
       }
       return updated;
     });

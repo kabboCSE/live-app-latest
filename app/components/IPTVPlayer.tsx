@@ -346,11 +346,11 @@ export default function IPTVPlayer() {
             </div>
             <p className="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed select-text flex-1">
               <span className="text-amber-400 font-black">Notice: </span>
-              If you encounter a blank or black screen, please click the{" "}
+              Seeing a blank or black screen? Click the{" "}
               <span className="text-emerald-400 font-bold">
                 Reload Stream
               </span>{" "}
-              button in the player controls or{" "}
+              button from the player controls or hit{" "}
               <span className="text-emerald-400 font-bold">
                 Try Reconnecting
               </span>

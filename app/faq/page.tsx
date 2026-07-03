@@ -19,44 +19,45 @@ import Header from "../components/Header";
 const faqs = [
   {
     id: "faq-1",
-    question: "What is IPTV and how does this player work?",
+    question: "What exactly is IPTV and how does this player function?",
     answer:
-      "IPTV (Internet Protocol Television) delivers television content over the internet instead of traditional terrestrial, satellite, or cable formats. This player is a web-based client that plays live streams (such as HLS .m3u8 files) directly in your browser. You can load our default channel list or import your own custom playlists.",
+      "IPTV (Internet Protocol Television) is a technology that streams television content through your internet connection instead of relying on traditional cable or satellite signals. Our player is a browser-based application that can play live HLS streams (.m3u8 files) directly. You can browse our built-in channel collection or bring your own playlists into the app.",
     icon: Tv,
   },
   {
     id: "faq-2",
-    question: "How do I load or import custom playlists?",
+    question: "What is the process for importing my own playlist?",
     answer:
-      "To import a custom playlist, click on the 'Playlists Manager' tab inside the channel list section. You can either paste a public M3U URL (e.g., from GitHub) or upload a local playlist file (.m3u, .m3u8, or .json). Once imported, it will be stored securely in your browser cache and appear in the 'Your Playlists' sidebar.",
+      "To bring in a custom playlist, navigate to the 'Playlists Manager' tab located within the channel listing area. From there you can either provide a direct M3U URL from the web (e.g., hosted on GitHub) or upload a playlist file from your device (supports .m3u, .m3u8, and .json formats). Once imported, the playlist will be saved in your browser and will appear under 'Your Playlists' in the sidebar.",
     icon: ListPlus,
   },
   {
     id: "faq-3",
-    question: "Why do some channels fail to load or show 'Stream Unavailable'?",
+    question:
+      "Why do certain channels fail to start or display a 'Stream Unavailable' message?",
     answer:
-      "Live streams can go offline for various reasons: the stream source is temporarily overloaded, the broadcaster changed the URL, or the stream has geographical restrictions (geo-blocking). If a stream fails to load, try clicking the 'Try Reconnecting' button, or switch to a different channel.",
+      "There are several reasons a live stream might be inaccessible: the source server may be under heavy load, the broadcaster might have changed the stream URL, or the content could be restricted in your region (geo-blocking). When this happens, you can try using the 'Try Reconnecting' option or simply switch to another available channel.",
     icon: ShieldAlert,
   },
   {
     id: "faq-4",
-    question: "Do I need to install any app or extensions?",
+    question: "Do I need to download any additional software or plugins?",
     answer:
-      "No! This IPTV player runs completely in modern web browsers (Chrome, Safari, Edge, Firefox) on mobile devices, tablets, and computers. It has a built-in custom HLS stream player, so no additional extensions or app installations are required.",
+      "Not at all! This IPTV player operates entirely within your web browser (Chrome, Safari, Edge, Firefox) on any device including phones, tablets, and desktops. It includes a built-in HLS video player so there is no need for extra extensions, plugins, or software installations.",
     icon: Globe,
   },
   {
     id: "faq-5",
-    question: "Is this service free and legal?",
+    question: "Is this platform free to use and is it legal?",
     answer:
-      "Yes, this web player is 100% free to use. We do not host any stream files or media databases. The default channel list consists of publicly available free-to-air (FTA) channels. We encourage users to only load playlist links that they have the legal right to stream.",
+      "Absolutely, this web player is completely free of charge. We do not host, store, or distribute any media files or streams ourselves. Our default channel list only contains publicly accessible free-to-air (FTA) channels. We strongly advise users to only load playlists that they are legally authorized to access and stream.",
     icon: BookOpen,
   },
   {
     id: "faq-6",
-    question: "How can I contact support or request channels?",
+    question: "How can I get support or request new channels to be added?",
     answer:
-      "For any queries, suggestions, or technical support, please contact the developer via Telegram only (@KABBO). You can also follow our official GitHub repository () for code updates, bug reports, and new features.",
+      "If you have any inquiries, suggestions, or need technical assistance, please reach out to the developer exclusively via Telegram (@KABBO). You can also follow our official GitHub repository to stay informed about updates, bug fixes, and new feature releases.",
     icon: MessageCircle,
   },
 ];
@@ -104,8 +105,8 @@ export default function FAQPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-sm sm:text-base text-gray-400 font-medium max-w-xl mx-auto leading-relaxed"
             >
-              Got questions about custom playlists, stream issues, or compatibility?
-              Find quick answers and guides below.
+              Got questions about custom playlists, stream issues, or
+              compatibility? Find quick answers and guides below.
             </motion.p>
           </div>
 
@@ -128,9 +129,7 @@ export default function FAQPage() {
                     className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 cursor-pointer focus:outline-none select-none"
                   >
                     <div className="flex items-center gap-3.5">
-                      <div
-                        className="p-2.5 rounded-xl border border-primary/20 bg-primary/10 text-primary flex-shrink-0"
-                      >
+                      <div className="p-2.5 rounded-xl border border-primary/20 bg-primary/10 text-primary flex-shrink-0">
                         <IconComponent size={18} strokeWidth={2} />
                       </div>
                       <span className="text-sm sm:text-base font-bold text-white leading-tight">
@@ -172,10 +171,12 @@ export default function FAQPage() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="mt-12 p-6 rounded-2xl border border-white/10 sm:border-white/5 bg-white/[0.01] backdrop-blur-sm text-center max-w-xl mx-auto space-y-4"
           >
-            <h3 className="text-base sm:text-lg font-bold">Still have questions?</h3>
+            <h3 className="text-base sm:text-lg font-bold">
+              Still have questions?
+            </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-medium">
-              If you couldn&apos;t find your answer here, feel free to reach out for direct support.
-              We are active on Telegram.
+              If you could not find your answer here, feel free to reach out for
+              direct support. We are active on Telegram.
             </p>
             <div className="pt-2">
               <a
