@@ -1,37 +1,9 @@
 [
   {
-    "name": "Fox Sport Fifa",
-    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
-    "group": "FIFA Premium",
-    "url": "http://84.17.50.102/fox/index.m3u8",
-    "type": "hls"
-  },
-  {
-    "name": "TPV Sport",
-    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
-    "group": "FIFA Premium",
-    "url": "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8",
-    "type": "hls"
-  },
-  {
-    "name": "Bein Sports Direct",
-    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
-    "group": "FIFA Premium",
-    "url": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
-    "type": "hls"
-  },
-  {
     "name": "BTV",
     "logo": "https://ssl.com.bd/sites/default/files/BTV%20Logo%20Gallery.png",
     "group": "FIFA Premium",
     "url": "http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8",
-    "type": "hls"
-  },
-  {
-    "name": "BTV2",
-    "logo": "https://raw.githubusercontent.com/sm-monirulislam/SM-Live-TV/main/Script/world_cup.png",
-    "group": "FIFA Premium",
-    "url": "http://114.130.57.233:8080/BTV/video.m3u8?token=SkQuhAXZxgBan1",
     "type": "hls"
   },
   {
@@ -55,7 +27,27 @@
     "url": "http://114.130.57.233:8080/Somoy-TV-3Mb/tracks-v1a1/mono.m3u8?token=SkQuhAXZxgBan1",
     "type": "hls"
   },
-
+  {
+    "name": "Fox Sport Fifa",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA Premium",
+    "url": "http://84.17.50.102/fox/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "TPV Sport",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA Premium",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8",
+    "type": "hls"
+  },
+  {
+    "name": "Bein Sports Direct",
+    "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
+    "group": "FIFA Premium",
+    "url": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+    "type": "hls"
+  },
   {
     "name": "Bein Sports Tekrar",
     "logo": "https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026--white.10e0b37b.png",
